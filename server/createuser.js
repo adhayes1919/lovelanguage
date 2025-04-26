@@ -45,6 +45,7 @@ async function registerUser(username, email, password, language) {
 			streak: 0,
 			score: 0,
 			language,
+			inPartnership: false,
 			deck: [],
 			createdAt:  new Date()
 		});
@@ -57,4 +58,4 @@ async function registerUser(username, email, password, language) {
 	}
 }
 
-registerUser("griffin", "griffin.speidel@gmail.com", "1234").catch(console.dir)
+registerUser(process.argv[2], process.argv[3], process.argv[4]).catch(console.dir)
