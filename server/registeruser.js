@@ -47,7 +47,11 @@ export default async function registerUser(db, username, password, confirmPasswo
 			deck: [],
 			createdAt:  new Date()
 		});
-
+        return {
+            success: true,
+            userId: result.insertedId,
+            matchCode
+        };
 		console.log('User registered: ', result.insertedID);
 	} catch (error) {	
 		console.error('Error registering user: ', error);

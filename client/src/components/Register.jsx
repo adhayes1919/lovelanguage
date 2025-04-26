@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { registerUser } from "utils/auth/auth.js";
+import { registerUser, loginUser } from "utils/auth/auth.js";
 
 const Register = () => {
     const [formData, setFormData] = useState({
@@ -18,8 +18,14 @@ const Register = () => {
         const result = await registerUser(formData);
         if (result.success) {
             console.log("User registered");
+            await loginUser({ username: formData.username, password: formData.password });
+
+            if (loginResult) {
+                console.error('Auto-login failed unexpectedly.');
+                navigate('/'); // 
+            }
         } else {
-            console.error(result.message);
+            alert(`Registration failed: ${registerResult.message}`);
         }
     };
 

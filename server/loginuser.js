@@ -17,14 +17,13 @@ export default async function loginUser(db, username, password) {
 
     if (isMatch) {
       console.log('Login successful!');
+      return true;
     } else {
       console.log('Incorrect password.');
     }
   } catch (error) {
     console.error('Error logging in:', error);
-  } finally {
-    await client.close();
-  }
+  } 
 }
 
 //loginUser("griffin", "1234").catch(console.dir)
