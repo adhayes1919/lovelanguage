@@ -49,7 +49,7 @@ async function registerUser(username, email, password, language) {
 			createdAt:  new Date()
 		});
 
-		console.log('User registered: ', username);
+		console.log('User registered: ', result.insertedID);
 	} catch (error) {	
 		console.error('Error registering user: ', error);
 	} finally {
