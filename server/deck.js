@@ -3,7 +3,7 @@ const { MongoClient, ObjectId } = require('mongodb');
 const uri = 'mongodb://10.135.168.95:27017';
 const client = new MongoClient(uri);
 
-async function deck_upsertCard(user_id, txt_front, txt_back){
+async function deck_upsertCardBack(user_id, txt_front, txt_back){
 	try {
 		await client.connect();
 		const db = client.db('lovelang');
@@ -18,7 +18,7 @@ async function deck_upsertCard(user_id, txt_front, txt_back){
 		if (updateResult.matchedCount == 0) {
 			const pushResult = await users.updateOne(
 				{ _id: new ObjectId(user_id) },
-				{ $push: { deck: {txt_front, txt_back } } }
+				{ $push: { deck: {txt_front, txt_back, ease: 0, image: null, audio: null} } }
 			);
 			console.log('New card inserted');
 		} else {
@@ -89,11 +89,64 @@ async function deck_getRequestsReceived(user_id) {
 	}
 }
 
+async function deck_getFullDeck(user_id) {
+	try {
+		await client.connect();
+		const db = client.db('lovelang');
+		const users = db.collection('users');
+
+		const userFound = await users.findOne({'_id': new ObjectId(user_id)});
+
+		if (userFound) {
+			return userFound.deck;
+		} else {
+			console.log("No matching user found");
+			return;
+		}
+
+	} catch  (error) {
+		console.log('Error getting deck: ', error);
+	}
+}
+
+async function deck_getCardInfo(user_id, txt_front) {
+	try {
+		await client.connect();
+		const db = client.db('lovelang');
+		const users = db.collection('users');
+
+		const userFound = await users.findOne(
+			{
+				'_id': new ObjectId(user_id),
+				"deck.txt_front": txt_front
+			},
+			{
+				projection: {
+					"deck.$": 1
+				}
+			}
+		);
+
+		if (userFound && userFound.deck.length > 0) {
+			return userFound.deck[0];
+		} else {
+			console.log("No matching card found");
+			return;
+		}
+
+	} catch  (error) {
+		console.log('Error finding card: ', error);
+	}
+}
+
 async function main() {
 	// await deck_requestCard(process.argv[2], process.argv[3]);
-	// await deck_upsertCard(process.argv[2], process.argv[3], process.argv[4]).catch(console.dir)
-	const requests = await deck_getRequestsReceived(process.argv[2]);
-	console.log(requests);
+	// await deck_upsertCardBack(process.argv[2], process.argv[3], process.argv[4]).catch(console.dir)
+	// const requests = await deck_getRequestsReceived(process.argv[2]);
+	// console.log(requests);
+	const deck = await deck_getFullDeck(process.argv[2]);
+	console.log(deck);
+	console.log(await deck_getCardInfo(process.argv[2],process.argv[3]));
 	await client.close();
 }
 
