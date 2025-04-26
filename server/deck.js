@@ -8,6 +8,7 @@ async function deck_upsertCard(user_id, txt_front, txt_back){
 		await client.connect();
 		const db = client.db('lovelang');
 		const users = db.collection('users');
+		const partnerships = db.collection('partnerships');
 		
 		const updateResult = await users.updateOne(
 			{ _id: new ObjectId(user_id),"deck.txt_front": txt_front},
@@ -25,9 +26,59 @@ async function deck_upsertCard(user_id, txt_front, txt_back){
 		}
 	} catch(error) {
 		console.error('Error in deck_upsertCard:', error);
-	} finally {
-		await client.close();
 	}
 }
 
-deck_upsertCard(process.argv[2], process.argv[3], process.argv[4]).catch(console.dir)
+async function deck_requestCard(userA_id, txt_request){
+	try {
+		await client.connect();
+		const db = client.db('lovelang');
+		const users = db.collection('users');
+		const partnerships = db.collection('partnerships');
+		const requests = db.collection('requests');
+		
+		const userAObjectId = new ObjectId(userA_id);
+
+		// get a reference to the requesting user
+		const userA = await users.findOne({ _id: userAObjectId });
+		if (!userA) {
+			console.log('User making request not found');
+			return;
+		}
+
+		// find the partnership the user is in
+		const partnership = await partnerships.findOne({
+			$or: [
+				{ user1_id: userAObjectId },
+				{ user2_id: userAObjectId }
+			]
+		});
+
+		if (!partnership) {
+			console.log('No partnership found for this user.');
+			return;
+		}
+	
+		// Determine the partner's ID
+		const partnerId = partnership.user1_id.equals(userAObjectId)
+			? partnership.user2_id
+			: partnership.user1_id;
+
+		// create a request for the given users with the indicated text
+		await requests.insertOne({
+			sender_id: userA._id,
+			recipient_id: partnerId,
+			txt_request
+		});
+	} catch (error) {
+		console.error('Error making request:', error);
+	}
+}
+
+async function main() {
+	await deck_requestCard(process.argv[2], process.argv[3]);
+	await client.close();
+}
+
+// deck_upsertCard(process.argv[2], process.argv[3], process.argv[4]).catch(console.dir)
+main().catch(console.dir);
