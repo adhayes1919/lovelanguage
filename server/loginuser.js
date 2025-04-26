@@ -1,19 +1,7 @@
-import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
-import { MongoClient } from 'mongodb';
 
-// Load environment variables
-dotenv.config();
-
-// MongoDB connection
-const uri = process.env.MONGO_URI;
-const client = new MongoClient(uri);
-
-
-export default async function loginUser(username, password) {
+export default async function loginUser(db, username, password) {
   try {
-    await client.connect();
-    const db = client.db('lovelang');
     const users = db.collection('users');
 
     // Find user by username

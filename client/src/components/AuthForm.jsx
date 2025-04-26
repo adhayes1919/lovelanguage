@@ -3,7 +3,7 @@ import Register from "./Register"
 
 const AuthForm = () => {
     //TODO: handle cookies
-    let temp = true; //temp variable to only display one of the two forms at once
+    let temp = false; //temp variable to only display one of the two forms at once
     //TODO: missing an option to switch between the two ("no account? register here? already have an account? log in here")
 
     return (

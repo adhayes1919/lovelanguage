@@ -1,21 +1,34 @@
-import express from 'express';
-import registerUser from './createuser.js';
-import loginUser from './loginuser.js';
-
+import dotenv from 'dotenv';
 dotenv.config();
+
+import { MongoClient } from 'mongodb';
+import cors from 'cors';
+import express from 'express';
+import registerUser from './registeruser.js';
+import loginUser from './loginuser.js';
+import ISO6391 from 'iso-639-1';
 
 const uri = process.env.MONGO_URI;
 const client = new MongoClient(uri);
+await client.connect();
+const db = client.db('lovelang');
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 
-const PORT = process.env.port;
+const PORT = process.env.PORT;
 
-app.post("/register", (req,res) => {
-    const { username, email, password, language } = req.body;
+app.post("/api/register", async (req,res) => {
+    const { username, password, confirmPassword, name, language } = req.body;
+    if ( password != confirmPassword ) {
+        return res.status(400).json({ success: false, message: 'Passwords do not match' });
+    }
+    if (!ISO6391.validate(language)) {
+        return res.status(400).json({ success: false, message: 'Invalid language.' });
+    }
     try {
-        const result = await registerUser(username, email, password, language);
+        const result = await registerUser(db, username, password, confirmPassword, name, language);
         if (result === -1) {
             return res.status(400).json({ success: false, message: 'Username already exists' }); 
         }
@@ -26,11 +39,11 @@ app.post("/register", (req,res) => {
     }
 });
 
-app.post("/login", (req,res) => {
+app.post("/api/login", async (req,res) => {
     const { username, password } = req.body;
 
     try {
-        const success = await loginUser(username, password);
+        const success = await loginUser(db, username, password);
 
         if (!success) {
             return res.status(401).json({ success: false, message: 'Incorrect username or password' });

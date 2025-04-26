@@ -1,16 +1,11 @@
-const bcrypt = require('bcrypt');
-const { MongoClient } = require('mongodb');
-const uri = process.env.MONGO_URI;
-const client = new MongoClient(uri);
+import bcrypt from 'bcrypt';
 
 async function generateMatchCode(length = 5) {
 	return Math.random().toString(36).substring(2, 2+ length).toUpperCase();
 }
 
-export default async function registerUser(username, email, password, language) {
+export default async function registerUser(db, username, password, confirmPassword, name, language) {
 	try {
-		await client.connect();
-		const db = client.db('lovelang');
 		const users = db.collection('users');
 		
 		// check if username already exists
@@ -19,6 +14,11 @@ export default async function registerUser(username, email, password, language) 
 			console.log('User with this name already exists');
 			return -1;
 		}
+
+        if (password !== confirmPassword) {
+			console.log('Passwords do not match');
+            return -2;
+        }
 
 		const saltRounds = 10;
 		const hashedPassword = await bcrypt.hash(password, saltRounds);
@@ -37,8 +37,8 @@ export default async function registerUser(username, email, password, language) 
 
 		const result = await users.insertOne({
 			username,
-			email,
 			password: hashedPassword,
+            name,
 			matchCode,
 			pfpNum: 0, // number corresponding to one of the preset profile pictures
 			streak: 0,
@@ -51,9 +51,7 @@ export default async function registerUser(username, email, password, language) 
 		console.log('User registered: ', result.insertedID);
 	} catch (error) {	
 		console.error('Error registering user: ', error);
-	} finally {
-		await client.close();
-	}
+	} 
 }
 
 //registerUser("griffin", "griffin.speidel@gmail.com", "1234").catch(console.dir)

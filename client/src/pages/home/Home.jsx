@@ -5,7 +5,7 @@ import { AddPartner, AddCouple } from './Pair.jsx';
 import Study from './Study.jsx';
 
 const Home = () => {
-    let isLoggedIn = true; //TODO: placeholder to check for user status
+    let isLoggedIn = false; //TODO: placeholder to check for user status
     let isPairedPartner = true; //TODO: another placeholder to check if user has a paired partner
 
     if (!isLoggedIn) {
