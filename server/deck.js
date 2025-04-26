@@ -75,10 +75,27 @@ async function deck_requestCard(userA_id, txt_request){
 	}
 }
 
+async function deck_getRequestsReceived(user_id) {
+	try {
+		await client.connect();
+		const db = client.db('lovelang');
+		const requests = db.collection('requests');
+
+		const requestsReceived = await requests.find({ recipient_id: new ObjectId(user_id) }).toArray();
+
+		return requestsReceived;
+	} catch (error) {
+		console.log('Error showing requests received: ', error);
+	}
+}
+
 async function main() {
-	await deck_requestCard(process.argv[2], process.argv[3]);
+	// await deck_requestCard(process.argv[2], process.argv[3]);
+	// await deck_upsertCard(process.argv[2], process.argv[3], process.argv[4]).catch(console.dir)
+	const requests = await deck_getRequestsReceived(process.argv[2]);
+	console.log(requests);
 	await client.close();
 }
 
-// deck_upsertCard(process.argv[2], process.argv[3], process.argv[4]).catch(console.dir)
+
 main().catch(console.dir);
