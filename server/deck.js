@@ -1,6 +1,6 @@
+require('dotenv'.config();
 const { MongoClient, ObjectId } = require('mongodb');
-
-const uri = 'mongodb://10.135.168.95:27017';
+const uri = process.env.MONGO_URI;
 const client = new MongoClient(uri);
 
 async function deck_upsertCard(user_id, txt_front, txt_back){

@@ -1,10 +1,16 @@
-const { MongoClient } = require('mongodb');
-const bcrypt = require('bcrypt');
+import dotenv from 'dotenv';
+import bcrypt from 'bcrypt';
+import { MongoClient } from 'mongodb';
 
-const uri = 'mongodb://10.135.168.95/27017'; // your MongoDB URI
+// Load environment variables
+dotenv.config();
+
+// MongoDB connection
+const uri = process.env.MONGO_URI;
 const client = new MongoClient(uri);
 
-async function loginUser(username, password) {
+
+export default async function loginUser(username, password) {
   try {
     await client.connect();
     const db = client.db('lovelang');
@@ -33,4 +39,4 @@ async function loginUser(username, password) {
   }
 }
 
-loginUser("griffin", "1234").catch(console.dir)
+//loginUser("griffin", "1234").catch(console.dir)

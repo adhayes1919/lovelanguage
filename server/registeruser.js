@@ -1,14 +1,13 @@
-const { MongoClient } = require('mongodb');
 const bcrypt = require('bcrypt');
-
-const uri = 'mongodb://10.135.168.95:27017';
+const { MongoClient } = require('mongodb');
+const uri = process.env.MONGO_URI;
 const client = new MongoClient(uri);
 
 async function generateMatchCode(length = 5) {
 	return Math.random().toString(36).substring(2, 2+ length).toUpperCase();
 }
 
-async function registerUser(username, email, password, language) {
+export default async function registerUser(username, email, password, language) {
 	try {
 		await client.connect();
 		const db = client.db('lovelang');
@@ -57,4 +56,4 @@ async function registerUser(username, email, password, language) {
 	}
 }
 
-registerUser("griffin", "griffin.speidel@gmail.com", "1234").catch(console.dir)
+//registerUser("griffin", "griffin.speidel@gmail.com", "1234").catch(console.dir)
