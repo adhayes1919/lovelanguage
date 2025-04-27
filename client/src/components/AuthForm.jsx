@@ -1,10 +1,10 @@
-import './Navbar.css'
+import './AuthForm.css'
 import { useState } from 'react';
 import { loginUser, registerUser } from 'utils/auth.js';
 import { useNavigate } from 'react-router-dom';
 
 const AuthForm = () => {
-	const [isLoginView, setIsLoginView] = useState(false);
+	const [isLoginView, setIsLoginView] = useState(true);
 
 	return (
 		<div>
@@ -41,20 +41,23 @@ const Login = ({ switchToRegister }) => {
 	};
 
 	return (
-		<div>
-			<form onSubmit={handleSubmit}>
-				<input name="username" onChange={handleChange} placeholder="Username" />
-				<input name="name" onChange={handleChange} placeholder="Your name" />
-				<input name="password" type="password" onChange={handleChange} placeholder="Password" />
-				<input name="confirmPassword" type="password" onChange={handleChange} placeholder="Confirm Password" />
-				<input name="language" onChange={handleChange} placeholder="Language" />
-				<button type="submit">Register</button>
-			</form>
-			<p>
-				Already have an account?{' '}
-				<button onClick={switchToRegister}>Login here</button>
-			</p>
-		</div>
+	<div className="auth-page-wrap">
+		<div className="auth-main-container">
+			<div className="auth-name-and-form">
+					<h1 className="auth-h1" id="h1-login">Welcome Back</h1>
+				<form className="auth-form" id="form-login" onSubmit={handleSubmit}>
+					<input name="username" onChange={handleChange} placeholder="Username" />
+					<input name="password" type="password" onChange={handleChange} placeholder="Password" />
+				</form>
+				<button className="auth-CTA-button">Log In</button>
+			</div>
+			<div className="auth-bottom-text">
+				<p>Doesn't have an account?</p>
+				<p id="switch-page" onClick={switchToRegister} >Register Here</p>
+			</div>
+	</div>
+
+</div>
 	);
 };
 
@@ -106,9 +109,9 @@ const Register = ({ switchToLogin }) => {
 		</div>
 
 
-		<div className="auth-bottom-text">
+		<div className="auth-bottom-text" id="text-bottom-register">
 				<p>Already have an account?</p>
-				<p id="go-to-logIn" onClick={switchToLogin} >Log In Here</p>
+				<p id="switch-page" onClick={switchToLogin} >Log In Here</p>
 		</div>
 	</div>
 
