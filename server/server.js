@@ -58,11 +58,18 @@ app.post("/api/auth/register", async (req, res) => {
 app.post("/api/auth/login", async (req, res) => {
 	const { username, password } = req.body;
 	try {
-		const success = await loginUser(db, username, password);
-		if (!success) {
+		const result = await loginUser(db, username, password);
+
+		if (!result.success) {
 			return res.status(401).json({ success: false, message: 'Incorrect username or password' });
 		}
-		res.status(200).json({ success: true, message: 'Login successful' });
+
+		// Attach the userId to the success response
+		res.status(200).json({ 
+			success: true, 
+			message: 'Login successful', 
+			userId: result.userId.toString() 
+		});
 	} catch (error) {
 		console.error('Error logging in:', error);
 		res.status(500).json({ success: false, message: 'Server error' });

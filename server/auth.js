@@ -6,6 +6,7 @@ async function generateMatchCode(length = 5) {
 }
 
 // Login user
+
 export async function loginUser(db, username, password) {
 	try {
 		const users = db.collection('users');
@@ -13,20 +14,20 @@ export async function loginUser(db, username, password) {
 		const user = await users.findOne({ username });
 		if (!user) {
 			console.log('User not found');
-			return false;
+			return { success: false, message: "User not found" };
 		}
 
 		const isMatch = await bcrypt.compare(password, user.password);
 		if (isMatch) {
 			console.log('Login successful!');
-			return true;
+			return { success: true, userId: user._id }; 
 		} else {
 			console.log('Incorrect password.');
-			return false;
+			return { success: false, message: "Incorrect password" };
 		}
 	} catch (error) {
 		console.error('Error logging in:', error);
-		return false;
+		return { success: false, message: "Server error" };
 	}
 }
 
