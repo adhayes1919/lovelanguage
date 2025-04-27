@@ -1,20 +1,20 @@
 import Navbar from 'components/Navbar';
 import { useState } from 'react';
-
+import './Study.css'
 
 //where currentEF is the existing ease factor
 //based of SM-2 ease factor for spaced repetition
 
 function calculateEase(currentEF, quality) {
-  const newEF = currentEF + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02));
-  return Math.max(newEF, 1.3);
+    const newEF = currentEF + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02));
+    return Math.max(newEF, 1.3);
 }
 
 const FEEDBACK = {
-    AGAIN : 1,
-    HARD : 2,
-    GOOD : 3,
-    EASY : 4,
+    AGAIN: 1,
+    HARD: 2,
+    GOOD: 3,
+    EASY: 4,
 }
 
 
@@ -28,7 +28,7 @@ const CurrentCards = () => {
 
     return (
         <div>
-            <span> your word </span> 
+            <span> your word </span>
             <button> listen (if applicable) </button>
             <div className="feedbackButtons">
                 <span> Rate this card </span>
@@ -54,7 +54,7 @@ const Study = () => {
         const [front, setFront] = useState('');
         const [audioFile, setAudioFile] = useState(null);
         const [image, setImage] = useState(null);
-        
+
         const handleSubmit = (e) => {
             e.preventDefault();
             //TODO: actually send to db lmao
@@ -63,27 +63,27 @@ const Study = () => {
             setImage(null);
         }
         return (
-                        //TODO: make sure DB can handle varying audio/images
-                        //TODO: "record?" option
-                        //autofill "partner" with partners name
+            //TODO: make sure DB can handle varying audio/images
+            //TODO: "record?" option
+            //autofill "partner" with partners name
             <div>
-                <form onSubmit= {handleSubmit} >
+                <form onSubmit={handleSubmit} >
                     <div>
-                        <input type="text" 
-                        placeholder ="front" required 
-                        onChange={(e) => setFront(e.target.value)} 
-                    />
+                        <input type="text"
+                            placeholder="front" required
+                            onChange={(e) => setFront(e.target.value)}
+                        />
                     </div>
                     <div>
-                        Attach audio?  
-                        <input type="file" 
+                        Attach audio?
+                        <input type="file"
                             accept="audio/*"
                             onChange={(e) => setAudioFile(e.target.files[0])}
                         />
                     </div>
                     <div>
                         Attach image?
-                        <input type="file" 
+                        <input type="file"
                             accept="image/*"
                             onChange={(e) => setImageFile(e.target.files[0])}
                         />
@@ -99,8 +99,8 @@ const Study = () => {
         let phrasesToComplete = ["first", "second"]; //TODO: DB query (get list of words)
         let currentPhrase;
         let cardsToFinish;
-        if (phrasesToComplete){
-            currentPhrase = phrasesToComplete[0]; 
+        if (phrasesToComplete) {
+            currentPhrase = phrasesToComplete[0];
             cardsToFinish = phrasesToComplete.length; //TODO: DB query
         }
 
@@ -108,51 +108,69 @@ const Study = () => {
         const [audioFile, setAudioFile] = useState(null);
         const [image, setImageFile] = useState(null);
 
-        const handleSubmit = (e) =>  {
+        const handleSubmit = (e) => {
             e.preventDefault();
             //TODO: database again lmao
         }
         //TODO: load word/image/audio from DB
         return (
-            <div>
-                <div>
-                    <span> you have {cardsToFinish} cards to finish from {partner} </span>
-                </div>
+            <div className="finishcard-container">
+                <div className="finishcard-badge"></div>
+                <div className="finishcard-partner">AYDEN</div>
 
-                <span> Current word: {currentPhrase} </span>
-                <form onSubmit = {handleSubmit}>
-                    <div>
-                        <textarea onChange={(e)=> setBack(e.target.value)} />
-                    </div>
-                    <div>
-                        Attach audio?  
-                        <input type="file" 
-                            accept="audio/*"
-                            onChange={(e) => setAudioFile(e.target.files[0])}
+                <div className="finishcard-inner">
+                    {/* <div className="finishcard-info">
+                        You have {cardsToFinish} cards to finish from {partner}
+                    </div> */}
+
+                    <div className="finishcard-word">{currentPhrase}</div>
+
+                    <form onSubmit={handleSubmit} style={{ width: '100%' }}>
+                        <textarea
+                            className="finishcard-textarea"
+                            placeholder="Type your answer here..."
+                            value={back}
+                            onChange={(e) => setBack(e.target.value)}
                         />
-                    </div>
-                    <div>
-                        Attach image?
-                        <input type="file" accept="image/*"
-                            onChange={(e) => setImageFile(e.target.files[0])}
-                        />
-                    </div>
-                    <button type="submit"> return to {partner} </button>
-                </form>
+                        <div style={{ marginTop: '10px' }}>
+                            Attach audio?
+                            <input
+                                type="file"
+                                accept="audio/*"
+                                onChange={(e) => setAudioFile(e.target.files[0])}
+                            />
+                        </div>
+                        <div style={{ marginTop: '10px' }}>
+                            Attach image?
+                            <input
+                                type="file"
+                                accept="image/*"
+                                onChange={(e) => setImageFile(e.target.files[0])}
+                            />
+                        </div>
+                        <button type="submit" className="finishcard-submit">
+                            Return to {partner}
+                        </button>
+                    </form>
+                </div>
             </div>
-        )
+        );
     }
 
     return (
         <div>
             <div>
-              <button onClick={handleStartClick}>Start</button>
-              <button onClick={handleFinishClick}>Finish</button>
-              <button onClick={handleCurrentClick}>Current Cards</button>
+                {!activeView && (
+                    <div className="study-buttons">
+                        <button className="study-button" onClick={handleStartClick}>Start</button>
+                        <button className="study-button" onClick={handleFinishClick}>Finish</button>
+                        <button className="study-button" onClick={handleCurrentClick}>Current Cards</button>
+                    </div>
+                )}
 
-              {activeView === 'start' && <StartCard />}
-              {activeView === 'finish' && <FinishCard />}
-              {activeView === 'current' && <CurrentCards />}
+                {activeView === 'start' && <StartCard />}
+                {activeView === 'finish' && <FinishCard />}
+                {activeView === 'current' && <CurrentCards />}
             </div>
         </div>
     );

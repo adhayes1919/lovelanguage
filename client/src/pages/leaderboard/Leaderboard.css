@@ -1,0 +1,16 @@
+.topstep {
+  display: flex;
+  top: 155.57px;
+  margin: 0 auto;
+  justify-content: center;
+  width: 196.67px;
+  height: 108.86px;
+  background-color: #FFEFB8;
+}
+
+.bottomstep {
+  width: 590px;
+  height: 113.56px;
+  top: 264.43px;
+  background-color: #FFEFB8;
+}
