@@ -8,10 +8,9 @@ async function deck_upsertCardBack(user_id, txt_front, txt_back){
 		await client.connect();
 		const db = client.db('lovelang');
 		const users = db.collection('users');
-		const partnerships = db.collection('partnerships');
 		
 		const updateResult = await users.updateOne(
-			{ _id: new ObjectId(user_id),"deck.txt_front": txt_front},
+			{ _id: new ObjectId(user_id), "deck.txt_front": txt_front},
 			{ $set: { "deck.$.txt_back": txt_back } }
 		);
 
@@ -26,6 +25,27 @@ async function deck_upsertCardBack(user_id, txt_front, txt_back){
 		}
 	} catch(error) {
 		console.error('Error in deck_upsertCard:', error);
+	}
+}
+
+async function deck_updateCardEase(user_id, txt_front, score) {
+	try {
+		await client.connect();
+		const db = client.db('lovelang');
+		const users = db.collection('users');
+
+		const updateResult = await users.updateOne(
+			{ _id: new ObjectId(user_id), "deck.txt_front": txt_front},
+			{ $set: { "deck.$.ease": score} }
+		);
+
+		if (updateResult.matchedCount == 0) {
+			console.log('No matching card found');
+		} else {
+			console.log('Card successfully updated');
+		}
+	} catch (error) {
+		console.error('Error updating card ease score: ', error);
 	}
 }
 
@@ -144,6 +164,7 @@ async function main() {
 	// await deck_upsertCardBack(process.argv[2], process.argv[3], process.argv[4]).catch(console.dir)
 	// const requests = await deck_getRequestsReceived(process.argv[2]);
 	// console.log(requests);
+	await deck_updateCardEase(process.argv[2],process.argv[3],+process.argv[4]);
 	const deck = await deck_getFullDeck(process.argv[2]);
 	console.log(deck);
 	console.log(await deck_getCardInfo(process.argv[2],process.argv[3]));
