@@ -1,25 +1,54 @@
 import './Home.css';
 import { useState, useEffect } from 'react';
+import { getCookie, deleteCookie } from 'utils/cookies'; 
 import AuthForm from 'components/AuthForm';
 import Navbar from 'components/Navbar';
-import { AddPartner, AddCouple } from './Pair.jsx';
+import { AddPartner } from './Pair.jsx'; 
+import { fetchPartnerDetails } from 'utils/user'; 
 import Study from './Study.jsx';
 
 const Home = () => {
     const [isLoggedIn, setLoggedIn] = useState(true);
     const [isPairedPartner, setPairedPartner] = useState(true);
-    /*
-    useEffect(() => {
-        setLoggedIn(document.cookie.includes('username='));
-    }, []); // <-- empty array = run once on component mount */
 
-    //let isLoggedIn = true; //TODO: placeholder to check for user status
+    useEffect(() => {
+        const id = getCookie('userId');
+        setLoggedIn(!!id); // true if exists, false otherwise
+            if (id) {
+                checkPartnerStatus(id);
+        }
+    }, []);
+
+    //dummy function since can't set partner yet
+    async function checkPartnerStatus(userId) {
+        return true;
+    }
+    /* handles checking if user has a partner yet
+    async function checkPartnerStatus(userId) {
+        try {
+            const partnerDetails = await fetchPartnerDetails(userId);
+            if (partnerDetails) {
+                setPairedPartner(true); // Partner found
+            } else {
+                setPairedPartner(false); // No partner
+            }
+        } catch (error) {
+            console.error('Error checking partner status:', error);
+            setPairedPartner(false);
+        }
+    }
+    */
+
+    function handleLogout() {
+        deleteCookie('userId');  
+        console.log('Logged out.');
+        setLoggedIn(false);
+    }
 
     if (!isLoggedIn) {
-        console.log(isLoggedIn);
         return (
             <div>
-                <AuthForm />
+                <AuthForm setLoggedIn={setLoggedIn} />
             </div>
         );
     }
@@ -27,24 +56,17 @@ const Home = () => {
     if (!isPairedPartner) {
         return (
             <AddPartner />
-        )
+        );
     }
 
-    function handleLogout() {
-        document.cookie = "username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-        console.log('Logged out.');
-        window.location.reload();
-    }
-
-
-    //Actual main home page here
     return (
         <div>
             <button onClick={handleLogout}>Logout</button>
             <Study />
             <Navbar />
         </div>
-    )
-}
+    );
+};
 
 export default Home;
+

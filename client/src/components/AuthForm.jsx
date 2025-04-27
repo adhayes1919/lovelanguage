@@ -1,42 +1,45 @@
 import { useState } from 'react';
 import { loginUser, registerUser } from 'utils/auth.js';
-import { useNavigate } from 'react-router-dom'; 
+import { useNavigate } from 'react-router-dom';
+import { setCookie } from 'utils/cookies'; 
 
-const AuthForm = () => {
+const AuthForm = ({ setLoggedIn }) => {
 	const [isLoginView, setIsLoginView] = useState(true);
 
 	return (
 		<div>
 			{isLoginView ? (
-				<Login switchToRegister={() => setIsLoginView(false)} />
+				<Login switchToRegister={() => setIsLoginView(false)} setLoggedIn={setLoggedIn} />
 			) : (
-				<Register switchToLogin={() => setIsLoginView(true)} />
+				<Register switchToLogin={() => setIsLoginView(true)} setLoggedIn={setLoggedIn} />
 			)}
 		</div>
 	);
 };
 
-const Login = ({ switchToRegister }) => {
-	const [credentials, setCredentials] = useState({
-		username: '',
-		password: ''
-	});
+const Login = ({ switchToRegister, setLoggedIn }) => {
+	const [credentials, setCredentials] = useState({ username: '', password: '' });
 	const navigate = useNavigate();
 
 	const handleChange = (e) => {
 		setCredentials({ ...credentials, [e.target.name]: e.target.value });
 	};
 
-	const handleSubmit = async (e) => {
-		e.preventDefault();
-		const result = await loginUser(credentials);
-
+	const handleLogin = async (username, password) => {
+		const result = await loginUser({ username, password });
 		if (result.success) {
 			console.log('Login successful!');
-			navigate('/'); // Redirect after login if you want
+			setCookie('userId', result.userId); 
+			setLoggedIn(true);
+			navigate('/'); 
 		} else {
 			console.error(result.message);
 		}
+	};
+
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+		await handleLogin(credentials.username, credentials.password);
 	};
 
 	return (
@@ -54,7 +57,7 @@ const Login = ({ switchToRegister }) => {
 	);
 };
 
-const Register = ({ switchToLogin }) => {
+const Register = ({ switchToLogin, setLoggedIn }) => {
 	const [formData, setFormData] = useState({
 		name: '',
 		language: '',
@@ -68,21 +71,26 @@ const Register = ({ switchToLogin }) => {
 		setFormData({ ...formData, [e.target.name]: e.target.value });
 	};
 
+	const handleLogin = async (username, password) => {
+		const result = await loginUser({ username, password });
+		if (result.success) {
+			console.log('Auto-login successful!');
+			setCookie('userId', result.userId); 
+			setLoggedIn(true);
+			navigate('/'); 
+		} else {
+			console.error('Auto-login failed unexpectedly.');
+			switchToLogin();
+		}
+	};
+
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		const result = await registerUser(formData);
 
 		if (result.success) {
 			console.log('User registered');
-			const loginResult = await loginUser({ username: formData.username, password: formData.password });
-
-			if (loginResult.success) {
-				console.log('Auto-login successful!');
-				navigate('/'); // Redirect after auto-login
-			} else {
-				console.error('Auto-login failed unexpectedly.');
-				switchToLogin(); // Go back to login manually
-			}
+			await handleLogin(formData.username, formData.password);
 		} else {
 			alert(`Registration failed: ${result.message}`);
 		}
