@@ -30,6 +30,8 @@ const Home = () => {
         )
     }
 
+    //<button onClick={handleLogout}>Logout</button>
+
     function handleLogout() {
         document.cookie = "username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
         console.log('Logged out.');
@@ -40,8 +42,9 @@ const Home = () => {
     //Actual main home page here
     return (
         <div>
-            <button onClick={handleLogout}>Logout</button>
-            <Study />
+            <div className='home-page-wrap'>
+                <Study />
+            </div>
             <Navbar />
         </div>
     )

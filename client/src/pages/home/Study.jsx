@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Navbar from 'components/Navbar';
-import './Study.css';
+import './Finish.css';
 
 // SM-2 algorithm for spaced repetition
 function calculateEase(currentEF, quality) {

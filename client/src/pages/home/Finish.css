@@ -253,8 +253,8 @@
 /* Back button itself */
 .back-button {
   position: absolute;
-  top: 300px;
-  right: 250px;
+  top: 30px;
+  right: 30px;
   background: none;
   border: none;
   cursor: pointer;
