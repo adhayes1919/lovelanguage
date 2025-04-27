@@ -2,7 +2,7 @@
 
 export async function fetchUserDetails(userId) {
     try {
-        const response = await fetch('/api/user-getDetails', {
+        const response = await fetch('/api/user/get-details', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ user_id: userId }),
@@ -19,7 +19,7 @@ export async function fetchUserDetails(userId) {
 
 export async function fetchPartnerDetails(userId) {
     try {
-        const response = await fetch('/api/user-getPartner', {
+        const response = await fetch('/api/user/get-partner', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ user_id: userId }),

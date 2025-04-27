@@ -167,3 +167,17 @@ color: #000000;
   justify-content: space-around;
   align-items: center;
 }
+
+.finishcard-word {
+    display: block;
+    max-width: 100%;
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis; 
+    font-size: clamp(1rem, 5vw, 2rem); 
+}
+
+.finishcard-inner {
+    width: 100%;
+}
+

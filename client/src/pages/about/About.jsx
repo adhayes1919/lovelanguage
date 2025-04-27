@@ -24,8 +24,20 @@ const About = () => {
     loadUserDetails(); 
   }, [userId]);
 
-    
-    
+    const [partnerName, setPartnerName] = useState('');
+
+    useEffect(() => {
+      async function loadPartner() {
+        const id = getCookie('userId');
+        if (id) {
+          const result = await fetchPartnerDetails(id);
+          if (result?.partnerDetails?.name) {
+            setPartnerName(result.partnerDetails.name);
+          }
+        }
+      }
+      loadPartner();
+    }, []);
 
   return (
     <div>
@@ -40,7 +52,7 @@ const About = () => {
             </div>
             <div className="user-two-container">
               <div className="profile-pic"></div>
-              <h2>USER 2</h2>
+              <h2>{partnerName} </h2>
             </div>
           </div>
 

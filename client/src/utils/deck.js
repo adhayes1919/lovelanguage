@@ -1,57 +1,77 @@
-export async function deck_upsertCardBack(user_id, txt_front, txt_back) {
-	const response = await fetch('http://localhost:5000/api/deck/upsert-card-back', {
-		method: 'POST',
-		headers: { 'Content-Type': 'application/json' },
-		body: JSON.stringify({ user_id, txt_front, txt_back })
-	});
-	return response.ok;
+// --- utils/deck.js (CLEAN VERSION) ---
+
+import { getCookie } from './cookies';
+
+// Send a card request to your partner
+export async function sendRequestToPartner(userId, txtRequest) {
+  const response = await fetch('/api/deck/request-card', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ userA_id: userId, txt_request: txtRequest })
+  });
+  return response.ok;
 }
 
-export async function deck_updateCardEase(user_id, txt_front, score) {
-	const response = await fetch('http://localhost:5000/api/deck/update-card-ease', {
-		method: 'POST',
-		headers: { 'Content-Type': 'application/json' },
-		body: JSON.stringify({ user_id, txt_front, score })
-	});
-	return response.ok;
+// Fetch all requests assigned to the user (they must complete)
+export async function fetchRequestsAssignedToMe(userId) {
+  const response = await fetch('/api/deck/requests-received', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ user_id: userId })
+  });
+  if (!response.ok) throw new Error('Failed to fetch assigned requests');
+  return await response.json();
 }
 
-export async function deck_requestCard(userA_id, txt_request) {
-	const response = await fetch('http://localhost:5000/api/deck/request-card', {
-		method: 'POST',
-		headers: { 'Content-Type': 'application/json' },
-		body: JSON.stringify({ userA_id, txt_request })
-	});
-	return response.ok;
+// Submit a completed request
+export async function submitAnswerToRequest(userId, txtFront, txtBack) {
+  const response = await fetch('/api/deck/submit-card', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ user_id: userId, txt_front: txtFront, txt_back: txtBack })
+  });
+  return response.ok;
 }
 
-export async function deck_getRequestsReceived(user_id) {
-	const response = await fetch('http://localhost:5000/api/deck/requests-received', {
-		method: 'POST',
-		headers: { 'Content-Type': 'application/json' },
-		body: JSON.stringify({ user_id })
-	});
-	const data = await response.json();
-	return data;
+// Fetch all completed cards
+export async function fetchUserDeck(userId) {
+  const response = await fetch('/api/deck/full-deck', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ user_id: userId })
+  });
+  if (!response.ok) throw new Error('Failed to fetch full deck');
+  return await response.json();
 }
 
-export async function deck_getFullDeck(user_id) {
-	const response = await fetch('http://localhost:5000/api/deck/full-deck', {
-		method: 'POST',
-		headers: { 'Content-Type': 'application/json' },
-		body: JSON.stringify({ user_id })
-	});
-	const data = await response.json();
-	return data;
+// Fetch a specific card's info
+export async function fetchCardInfo(userId, txtFront) {
+  const response = await fetch('/api/deck/card-info', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ user_id: userId, txt_front: txtFront })
+  });
+  if (!response.ok) throw new Error('Failed to fetch card info');
+  return await response.json();
 }
 
-export async function deck_getCardInfo(user_id, txt_front) {
-	const response = await fetch('http://localhost:5000/api/deck/card-info', {
-		method: 'POST',
-		headers: { 'Content-Type': 'application/json' },
-		body: JSON.stringify({ user_id, txt_front })
-	});
-	const data = await response.json();
-	return data;
+// Delete a previously sent card request
+export async function deleteCardRequest(userId, txtRequest) {
+  const response = await fetch('/api/deck/delete-request', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ user_id: userId, txt_request: txtRequest })
+  });
+  return response.ok;
+}
+
+// Update the ease score after reviewing a card
+export async function updateCardEaseScore(userId, txtFront, score) {
+  const response = await fetch('/api/deck/update-card-ease', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ user_id: userId, txt_front: txtFront, score })
+  });
+  return response.ok;
 }
 
