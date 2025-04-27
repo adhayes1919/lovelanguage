@@ -1,0 +1,150 @@
+/* CARD-CREATION */
+* {
+  box-sizing: border-box;
+}
+
+.page-wrap{
+  padding: 0;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 1280px;
+  height: 832px;
+  background: #FE6566;
+
+}
+
+/* Group 25 */
+.outer-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 1110px;
+  height: 640px;
+}
+
+.users{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 640px;
+}
+
+.users > div{
+display: flex;
+flex-direction: column;
+justify-content: space-around;
+align-items: center;
+width: 263px;
+height: 295px;
+background: #FFEFB8;
+border: 4px solid #000000;
+border-radius: 20px;
+}
+
+.profile-pic {
+width: 181px;
+height: 181px;
+border-radius: 100px;
+border: 3px solid #000000;
+}
+/* Rectangle 30 */
+.user-one-container > .profile-pic{
+background: #FE6566;
+
+}
+
+.user-two-container > .profile-pic{
+background-color: #3AAB2F;
+}
+
+
+
+
+h2{
+margin: 0;
+font-family: 'Pixelify Sans';
+font-style: normal;
+font-weight: 400;
+font-size: 40px;
+line-height: 48px;
+color: #000000;
+}
+
+/* Group 27 */
+.stats-and-cards{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 738px;
+  height: 640px;
+}
+
+.stats{
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 719px;
+  height: 214px;
+  background: #FFEFB8;
+  border: 3px solid #000000;
+  border-radius: 30px;
+}
+
+
+.stats > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 155px;
+  height: 183px;
+}
+
+.stats img {
+  width: 106.67px;
+  height: 106.67px;
+}
+
+h3 {
+  margin: 0;
+  top: 250px;
+  font-family: 'Pixelify Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 40px;
+  line-height: 48px;
+  color: #000000;
+}
+
+h4{
+  margin: 0;
+  width: 167px;
+  font-family: 'Pixelify Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 30px;
+  line-height: 36px;
+  color: #000000;
+}
+
+
+
+.cards {
+  /* Group 28 */
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: space-between;
+  width: 738px;
+  height: 371px;
+}
+
+.cards div {
+  width: 352px;
+  height: 370px;
+  background: #FFEFB8;
+  border: 3px solid #000000;
+  border-radius: 30px;
+}
