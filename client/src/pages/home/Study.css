@@ -24,6 +24,23 @@
   text-align: center;
 }
 
+.finish-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 387px;
+  height: 480px;
+  background: #EA5E6F;
+  border: 4px solid #000000;
+  border-radius: 30px;
+  font-family: 'Pixelify Sans', sans-serif;
+  font-size: 32px;
+  color: #FFFFFF;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  text-align: center;
+}
+
 /* Optional: hover effect */
 .study-button:hover {
   background: #e04900;

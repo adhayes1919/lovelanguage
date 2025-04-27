@@ -163,7 +163,7 @@ const Study = () => {
                 {!activeView && (
                     <div className="study-buttons">
                         <button className="study-button" onClick={handleStartClick}>Start</button>
-                        <button className="study-button" onClick={handleFinishClick}>Finish</button>
+                        <button className="finish-button" onClick={handleFinishClick}>Finish</button>
                         <button className="study-button" onClick={handleCurrentClick}>Current Cards</button>
                     </div>
                 )}
