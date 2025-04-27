@@ -9,6 +9,7 @@ import { deck_upsertCardBack, deck_updateCardEase, deck_requestCard, deck_getReq
 import getLeaderboard from './leaderboard.js';
 import { incrementStreak, addPoints } from './couple.js'
 import loginUser from './loginuser.js';
+import user_getDetails from './user.js';
 import ISO6391 from 'iso-639-1';
 
 const uri = process.env.MONGO_URI;
@@ -57,6 +58,25 @@ app.post("/api/login", async (req,res) => {
         res.status(500).json({ success: false, message: 'Server error' });
     }
 });
+
+/* USER COMMANDS */
+
+app.post("/api/user_getDetails", async (req, res) => {
+	const { user_id } = req.body;
+
+	try {
+		const userDetails = await user_getDetails(db, user_id);
+		if (userDetails) {
+			res.status(200).json(userDetails);
+		} else {
+			res.status(404).send('User not found');
+		}
+	} catch (error) {
+		console.error('Error in /user_getDetails:', error);
+		res.status(500).send('Server error');
+	}
+});
+
 
 /* DECK COMMANDS */
 
