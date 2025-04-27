@@ -1,5 +1,16 @@
 import './Leaderboard.css';
 import Navbar from 'components/Navbar';
+import LeaderboardItem from "./LeaderboardItem";
+
+const sampleLeaderboardData = [
+    { coupleName: 'Peipei & Ayden', points: 400, streamNumber: 7 },
+    { coupleName: 'Felipe & Griffin', points: 380, streamNumber: 18 },
+    { coupleName: 'Oinay and James', points: 161, streamNumber: 10 },
+    { coupleName: 'Oinay and James', points: 161, streamNumber: 10 },
+    { coupleName: 'Oinay and James', points: 161, streamNumber: 10 },
+    { coupleName: 'Oinay and James', points: 161, streamNumber: 10 },
+    // add more entries here or fetch from backend
+  ];
 
 
 const Leaderboard = () => {
@@ -30,6 +41,18 @@ const Leaderboard = () => {
                 </div>
             </div>
             <img src="img/leaderboard-steps.svg" className="leaderboard-steps"/>
+
+            <div className="leaderboard-bottom-scroll">
+            {sampleLeaderboardData.map((entry, idx) => (
+          <LeaderboardItem
+            key={idx}
+            coupleName={entry.coupleName}
+            points={entry.points}
+            streamNumber={entry.streamNumber}
+          />
+        ))}
+            </div>
+
 
             <Navbar />
         </div>

@@ -26,8 +26,8 @@
   /* align the bottoms */
   justify-content: center;
   gap: 150px;
+  margin-bottom: 20px;
   /* space between the two cards */
-  margin-top: 50px;
 }
 
 /* Green Start card */

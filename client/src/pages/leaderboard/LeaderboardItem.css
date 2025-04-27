@@ -1,0 +1,60 @@
+.leaderboard-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #FFF0D4; /* Example background similar to your screenshot */
+  border-radius: 10px;
+  padding: 10px 15px;
+  margin: 6px 0;
+  font-family: 'Pixelify Sans', sans-serif; /* or your font */
+  font-size: 30px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.leaderboard-item-points{
+  font-size: 25px;
+  gap: 6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.leaderboard-item-stream{
+  font-size: 25px;
+  gap: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.leaderboard-item img {
+  width: 37px;
+  height: 37px;
+}
+
+.leaderboard-item:hover {
+  background-color: #FCEABC; /* subtle hover effect */
+}
+
+.leaderboard-item-couples {
+  flex: 3;
+  color: #000;
+}
+
+.leaderboard-item-points, .leaderboard-item-stream {
+  flex: 1;
+  text-align: right;
+  color: #333;
+}
+
+
+.couples-pic{
+position: absolute;
+border-radius: 80px;
+width: 43px;
+height: 43px;
+background: #3AAB2F;
+border: 3px solid #000000;
+}
