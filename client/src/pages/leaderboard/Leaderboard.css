@@ -1,4 +1,5 @@
 .leaderboard-page-wrap{
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: flex-end;
@@ -133,4 +134,42 @@ border: 3px solid #000000;
   border-radius: 15px;
   background: #FFF7D4; /* soft background */
   box-shadow: inset 0 0 10px #F0E7B8;
+}
+
+.couples-id-container {
+  /* Rectangle 32 */
+
+box-sizing: border-box;
+display: flex;
+justify-content: center;
+position: absolute;
+width: 252px;
+height: 88px;
+left: 999px;
+top: 32px;
+
+background: #FFEFB8;
+border: 3px solid #000000;
+border-radius: 30px;
+
+}
+
+.couples-id-content {
+  gap: 15px;
+  display: flex;
+  font-family: 'Pixelify Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 29px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+
+color: #7B6B6B;
+}
+
+.couples-id {
+color: #000000;
+cursor: pointer;
 }

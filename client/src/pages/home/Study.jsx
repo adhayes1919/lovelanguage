@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import Navbar from 'components/Navbar';
+// import Navbar from 'components/Navbar';
+import {Link } from 'react-router-dom'
 import './Finish.css';
 import './Start.css';
 import './Study.css';
@@ -69,7 +70,7 @@ const CurrentCards = () => {
                         <img src="img/Reaction2.svg" onClick={() => handleFeedback(FEEDBACK.HARD)}/>
                         <img src="img/Reaction3.svg" onClick={() => handleFeedback(FEEDBACK.GOOD)}/>
                         <img src="img/Reaction4.svg" onClick={() => handleFeedback(FEEDBACK.EASY)}/>
-                        {showUndo && <button onClick={undo}>Undo</button>}
+                        {/* {showUndo && <button onClick={undo}>Undo</button>} */}
                     </div>
                 )}
             </div>
@@ -215,6 +216,26 @@ const Study = ({setNavbarHidden}) => {
             )}
             {!activeView && (
                 <div className="study-buttons">
+                    <div className="top-container-icons">
+                        <Link to="/settings">
+                            <img
+                                src='img/setting.svg'
+                                alt="Leaderboard"
+                                className="settings-icon"
+                            />
+                        </Link>
+
+                        <div className="streak-top-container">
+                            <img src="img/my-streak-fire.svg" alt="" />
+                            <p>1</p>
+                        </div>
+
+                        <div className="streak-top-container" id="my">
+                            <img src="img/our-streak-heart.svg" alt="" />
+                            <p>1</p>
+                        </div>
+                    </div>
+
                     <div className="study-button" onClick={handleCurrentClick}>
                         <div >
                             <p className="user1-points">00000</p>

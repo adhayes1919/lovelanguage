@@ -6,9 +6,9 @@ const sampleLeaderboardData = [
     { coupleName: 'Peipei & Ayden', points: 400, streamNumber: 7 },
     { coupleName: 'Felipe & Griffin', points: 380, streamNumber: 18 },
     { coupleName: 'Oinay and James', points: 161, streamNumber: 10 },
+    { coupleName: 'This is Scrollable', points: 161, streamNumber: 10 },
     { coupleName: 'Oinay and James', points: 161, streamNumber: 10 },
-    { coupleName: 'Oinay and James', points: 161, streamNumber: 10 },
-    { coupleName: 'Oinay and James', points: 161, streamNumber: 10 },
+    { coupleName: 'This is Scrollable', points: 161, streamNumber: 10 },
     // add more entries here or fetch from backend
   ];
 
@@ -16,6 +16,13 @@ const sampleLeaderboardData = [
 const Leaderboard = () => {
     return (
         <div className="leaderboard-page-wrap">
+            <div className="couples-id-container">
+                <div className="couples-id-content">
+                    <p>Couple ID:</p>
+                    <p className="couples-id">UGZ97A</p>
+                </div>
+            </div>
+
             <div>
                 <div className="first-place">
                     <div className="user-left-first">

@@ -168,3 +168,75 @@ color: #000000;
   align-items: center;
   cursor: pointer;
 }
+
+
+.settings-icon {
+  /* lets-icons:setting-fill */
+
+position: absolute;
+width: 70px;
+height: 70px;
+left: 1175px;
+top: 31px;
+
+filter: drop-shadow(6px 5px 4px rgba(245, 163, 163, 0.25));
+
+}
+
+
+
+/* Rectangle 8 */
+
+
+
+.home-our-streak-top-container{
+  position: absolute;
+  width: 77px;
+  height: 67px;
+  left: 50px;
+  top: 34px;
+
+  background: #FFFFFF;
+  opacity: 0.64;
+  border-radius: 16px;
+
+}
+
+
+.streak-top-container{
+display: flex;
+justify-content: center;
+align-items: center;
+position: absolute;
+width: 77px;
+height: 67px;
+left: 154px;
+top: 34px;
+background: #FFFFFF;
+opacity: 0.64;
+border-radius: 16px;
+color: #000000;
+}
+
+
+#my {
+  /* Rectangle 8 */
+
+position: absolute;
+width: 77px;
+height: 67px;
+left: 50px;
+top: 34px;
+
+background: #FFFFFF;
+opacity: 0.64;
+border-radius: 16px;
+
+}
+
+
+.streak-top-container img{
+width: 35px;
+height: 35px;
+z-index: 30;
+}
