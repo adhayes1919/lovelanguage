@@ -65,11 +65,10 @@ const CurrentCards = () => {
 
                 {cardSide === 'back' && (
                     <div className="feedbackButtons">
-                        <span>Rate this card</span>
-                        <button onClick={() => handleFeedback(FEEDBACK.AGAIN)}>1: Again</button>
-                        <button onClick={() => handleFeedback(FEEDBACK.HARD)}>2: Hard</button>
-                        <button onClick={() => handleFeedback(FEEDBACK.GOOD)}>3: Good</button>
-                        <button onClick={() => handleFeedback(FEEDBACK.EASY)}>4: Easy</button>
+                        <img src="img/Reaction1.svg" onClick={() => handleFeedback(FEEDBACK.AGAIN)}/>
+                        <img src="img/Reaction2.svg" onClick={() => handleFeedback(FEEDBACK.HARD)}/>
+                        <img src="img/Reaction3.svg" onClick={() => handleFeedback(FEEDBACK.GOOD)}/>
+                        <img src="img/Reaction4.svg" onClick={() => handleFeedback(FEEDBACK.EASY)}/>
                         {showUndo && <button onClick={undo}>Undo</button>}
                     </div>
                 )}
@@ -204,9 +203,21 @@ const Study = () => {
             )}
             {!activeView && (
                 <div className="study-buttons">
-                    <button className="start-button" onClick={handleStartClick}>Start</button>
-                    <button className="finish-button" onClick={handleFinishClick}>Finish</button>
-                    <button className="study-button" onClick={handleCurrentClick}>Current Cards</button>
+                    <div className="study-button" onClick={handleCurrentClick}>
+                        <div >
+                            <p className="user1-points">00000</p>
+                            <img src="img/points-star.svg" alt="" />
+                        </div>
+                        <h2>Study</h2>
+                    </div>
+                    <div className="side-cards">
+                        <div className="finish-button" onClick={handleFinishClick}>
+                            <h3>USER2's Cards</h3>
+                        </div>
+                        <div className="start-button" onClick={handleStartClick}>
+                            <h3>My Cards</h3>
+                        </div>
+                    </div>
                 </div>
             )}
 
@@ -218,4 +229,3 @@ const Study = () => {
 };
 
 export default Study;
-

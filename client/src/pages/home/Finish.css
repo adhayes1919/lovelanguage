@@ -11,8 +11,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 387px;
-  height: 480px;
+  /* width: 387px;
+  height: 480px; */
   background: #FF5400;
   border: 4px solid #000000;
   border-radius: 30px;
@@ -28,18 +28,25 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 387px;
-  height: 480px;
+  overflow-wrap: break-word;
   background: #EA5E6F;
-  border: 4px solid #000000;
+  border: 5px solid #000000;
   border-radius: 30px;
+  width: 238px;
+  height: 295px;
+}
+
+.finish-button h3 {
   font-family: 'Pixelify Sans', sans-serif;
   font-size: 32px;
+  width: 220px;
   color: #FFFFFF;
   cursor: pointer;
   transition: background-color 0.3s;
   text-align: center;
 }
+
+
 
 /* Optional: hover effect */
 .study-button:hover {
