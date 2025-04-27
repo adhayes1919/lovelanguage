@@ -6,6 +6,8 @@ const Leaderboard = () => {
     return (
         <div>
             Leaderboard page
+            <div className='topstep'></div>
+            <div className='bottomstep'></div>
             <Navbar />
         </div>
     );
