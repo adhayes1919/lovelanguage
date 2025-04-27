@@ -1,193 +1,68 @@
-import Navbar from 'components/Navbar';
 import { useState } from 'react';
-import './Study.css'
+import Navbar from 'components/Navbar';
+import './Study.css';
 
-//where currentEF is the existing ease factor
-//based of SM-2 ease factor for spaced repetition
-
+// SM-2 algorithm for spaced repetition
 function calculateEase(currentEF, quality) {
-    const newEF = currentEF + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02));
-    return Math.max(newEF, 1.3);
+	const newEF = currentEF + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02));
+	return Math.max(newEF, 1.3);
 }
 
 const FEEDBACK = {
-    AGAIN: 1,
-    HARD: 2,
-    GOOD: 3,
-    EASY: 4,
-}
-
+	AGAIN: 1,
+	HARD: 2,
+	GOOD: 3,
+	EASY: 4,
+};
 
 const CurrentCards = () => {
-    const [showFeedback, setShowFeedback] = useState(false);
-    const [showUndo, setShowUndo] = useState(false);
-    const [cardSide, setCardSide] = useState("front"); //TODO: these are temp. they will have to change based on the card
-    function flipCard() {
-	    setCardSide(prev => (prev === "front" ? "back" : "front"));
-    }
-    function undo() {
-        // card = currentCard -1 
-        flipCard();
-    }
+	const [showUndo, setShowUndo] = useState(false);
+	const [cardSide, setCardSide] = useState('front');
 
-    const Feedback = () => {
-        return (
-            <div>
-                <div className="feedbackButtons">
-                    <span>Rate this card</span>
-                    <button onClick={() => handleFeedback(FEEDBACK.AGAIN)}>1: Again</button>
-                    <button onClick={() => handleFeedback(FEEDBACK.HARD)}>2: Hard</button>
-                    <button onClick={() => handleFeedback(FEEDBACK.GOOD)}>3: Good</button>
-                    <button onClick={() => handleFeedback(FEEDBACK.EASY)}>4: Easy</button>
-                    {showUndo && <button onClick={undo}> Undo? </button>}
-                </div>
-            </div>
-        );
-    }
-    
-    const handleFeedback = (feedbackValue) => {
-        if (!showUndo) {
-            setShowUndo(true); //undo should not be visible on first card
-        }
-        flipCard();
+	function flipCard() {
+		setCardSide(prev => (prev === 'front' ? 'back' : 'front'));
+	}
 
-		let easeFactor = 2.5; // TODO: initialize this for each card
-		let newEase = calculateEase(easeFactor, feedbackValue);
+	function undo() {
+		flipCard();
+	}
+
+	const handleFeedback = (feedbackValue) => {
+		if (!showUndo) setShowUndo(true);
+
+		flipCard();
+
+		const easeFactor = 2.5; // TODO: initialize this properly
+		const newEase = calculateEase(easeFactor, feedbackValue);
 		console.log(`new ease factor = ${newEase}`);
-		// TODO: put this somewhere
-	  };
-    
-    return (
-      <div>
-              <button onClick={flipCard}>
-                  {cardSide === "front" ? "Front of card" : "back of card"}
-              </button>
-                  {cardSide === "back" && <Feedback /> }
-        <button> listen </button>
-      </div>
-    );
-    
-}
+	};
 
-const Study = () => {
-    const partner = "partners-name"; //TODO: DB query
+	return (
+		<div>
+			<button onClick={flipCard}>
+				{cardSide === 'front' ? 'Front of card' : 'Back of card'}
+			</button>
 
-    const [activeView, setActiveView] = useState(null);
+			{cardSide === 'back' && (
+				<div className="feedbackButtons">
+					<span>Rate this card</span>
+					<button onClick={() => handleFeedback(FEEDBACK.AGAIN)}>1: Again</button>
+					<button onClick={() => handleFeedback(FEEDBACK.HARD)}>2: Hard</button>
+					<button onClick={() => handleFeedback(FEEDBACK.GOOD)}>3: Good</button>
+					<button onClick={() => handleFeedback(FEEDBACK.EASY)}>4: Easy</button>
+					{showUndo && <button onClick={undo}>Undo</button>}
+				</div>
+			)}
 
-    const handleStartClick = () => setActiveView('start');
-    const handleFinishClick = () => setActiveView('finish');
-    const handleCurrentClick = () => setActiveView('current')
+			<button>Listen</button> {/* TODO: add audio playback */}
+		</div>
+	);
+};
 
-    const StartCard = () => {
-        const [front, setFront] = useState('');
-        const [audioFile, setAudioFile] = useState(null);
-        const [image, setImage] = useState(null);
-
-        const handleSubmit = (e) => {
-            e.preventDefault();
-            //TODO: actually send to db lmao
-            setFront('');
-            setAudioFile(null);
-            setImage(null);
-        }
-        return (
-            //TODO: make sure DB can handle varying audio/images
-            //TODO: "record?" option
-            //autofill "partner" with partners name
-            <div>
-                <form onSubmit={handleSubmit} >
-                    <div>
-                        <input type="text"
-                            placeholder="front" required
-                            onChange={(e) => setFront(e.target.value)}
-                        />
-                    </div>
-                    <div>
-                        Attach audio?
-                        <input type="file"
-                            accept="audio/*"
-                            onChange={(e) => setAudioFile(e.target.files[0])}
-                        />
-                    </div>
-                    <div>
-                        Attach image?
-                        <input type="file"
-                            accept="image/*"
-                            onChange={(e) => setImageFile(e.target.files[0])}
-                        />
-                    </div>
-                    <button type="submit"> send to {partner} </button>
-                </form>
-            </div>
-        )
-    }
-
-const FinishCard = () => {
-
-  let phrasesToComplete = ["first", "second"]; //TODO: DB query (get list of words)
-  let currentPhrase;
-  let cardsToFinish;
-  if (phrasesToComplete) {
-      currentPhrase = phrasesToComplete[0];
-      cardsToFinish = phrasesToComplete.length; //TODO: DB query
-  }
-
-  const [back, setBack] = useState('');
-  const [audioFile, setAudioFile] = useState(null);
-  const [image, setImageFile] = useState(null);
-
-  const handleSubmit = (e) => {
-      e.preventDefault();
-      //TODO: database again lmao
-  }
-  //TODO: load word/image/audio from DB
-  return (
-      <div className="finishcard-container">
-          <div className="finishcard-badge"></div>
-          <div className="finishcard-partner">AYDEN</div>
-
-          <div className="finishcard-inner">
-              {/* <div className="finishcard-info">
-                  You have {cardsToFinish} cards to finish from {partner}
-              </div> */}
-
-              <div className="finishcard-word">{currentPhrase}</div>
-
-              <form onSubmit={handleSubmit} style={{ width: '100%' }}>
-                  <textarea
-                      className="finishcard-textarea"
-                      placeholder="Type your answer here..."
-                      value={back}
-                      onChange={(e) => setBack(e.target.value)}
-                  />
-                  <div style={{ marginTop: '10px' }}>
-                      Attach audio?
-                      <input
-                          type="file"
-                          accept="audio/*"
-                          onChange={(e) => setAudioFile(e.target.files[0])}
-                      />
-                  </div>
-                  <div style={{ marginTop: '10px' }}>
-                      Attach image?
-                      <input
-                          type="file"
-                          accept="image/*"
-                          onChange={(e) => setImageFile(e.target.files[0])}
-                      />
-                  </div>
-                  <button type="submit" className="finishcard-submit">
-                      Return to {partner}
-                  </button>
-              </form>
-  }     
- 
-
-// Create the front side of the card ("request" from partner in your native language)
 const StartCard = ({ partner }) => {
 	const [front, setFront] = useState('');
 	const [audioFile, setAudioFile] = useState(null);
-	const [image, setImageFile] = useState(null);
+	const [imageFile, setImageFile] = useState(null);
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
@@ -202,10 +77,10 @@ const StartCard = ({ partner }) => {
 			<div>
 				<input
 					type="text"
-					placeholder="front"
+					placeholder="Front"
 					required
-					onChange={(e) => setFront(e.target.value)}
 					value={front}
+					onChange={(e) => setFront(e.target.value)}
 				/>
 			</div>
 			<div>
@@ -224,60 +99,70 @@ const StartCard = ({ partner }) => {
 					onChange={(e) => setImageFile(e.target.files[0])}
 				/>
 			</div>
-			<button type="submit">send to {partner}</button>
+			<button type="submit">Send to {partner}</button>
 		</form>
 	);
 };
 
-//Create back side of card ("Return" to partner in your native language)
 const FinishCard = ({ partner }) => {
-	const phrasesToComplete = ["first", "second"]; // TODO: DB query
-	const currentPhrase = phrasesToComplete?.[0];
-	const cardsToFinish = phrasesToComplete?.length || 0;
+	const phrasesToComplete = ['first', 'second']; // TODO: DB query
+	const currentPhrase = phrasesToComplete?.[0] || '';
+	const cardsToFinish = phrasesToComplete.length;
 
 	const [back, setBack] = useState('');
 	const [audioFile, setAudioFile] = useState(null);
-	const [image, setImageFile] = useState(null);
+	const [imageFile, setImageFile] = useState(null);
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		// TODO: database save
+		// TODO: save to db
 	};
 
 	return (
-		<div>
-			<span>you have {cardsToFinish} cards to finish from {partner}</span>
-			<div>
-				<span>Current word: {currentPhrase}</span>
+		<div className="finishcard-container">
+			<div className="finishcard-badge"></div>
+			<div className="finishcard-partner">{partner}</div>
+
+			<div className="finishcard-inner">
+				<div className="finishcard-word">{currentPhrase}</div>
+
+				<form onSubmit={handleSubmit} style={{ width: '100%' }}>
+					<textarea
+						className="finishcard-textarea"
+						placeholder="Type your answer here..."
+						value={back}
+						onChange={(e) => setBack(e.target.value)}
+					/>
+
+					<div style={{ marginTop: '10px' }}>
+						Attach audio?
+						<input
+							type="file"
+							accept="audio/*"
+							onChange={(e) => setAudioFile(e.target.files[0])}
+						/>
+					</div>
+
+					<div style={{ marginTop: '10px' }}>
+						Attach image?
+						<input
+							type="file"
+							accept="image/*"
+							onChange={(e) => setImageFile(e.target.files[0])}
+						/>
+					</div>
+
+					<button type="submit" className="finishcard-submit">
+						Return to {partner}
+					</button>
+				</form>
 			</div>
-			<form onSubmit={handleSubmit}>
-				<div>
-					<textarea onChange={(e) => setBack(e.target.value)} value={back} />
-				</div>
-				<div>
-					Attach audio?
-					<input
-						type="file"
-						accept="audio/*"
-						onChange={(e) => setAudioFile(e.target.files[0])}
-					/>
-				</div>
-				<div>
-					Attach image?
-					<input
-						type="file"
-						accept="image/*"
-						onChange={(e) => setImageFile(e.target.files[0])}
-					/>
-				</div>
-				<button type="submit">return to {partner}</button>
-			</form>
 		</div>
 	);
 };
 
 const Study = () => {
-	const partner = "partners-name"; // TODO: DB query
+	const partner = 'partners-name'; // TODO: DB query
 	const [activeView, setActiveView] = useState(null);
 
 	const handleStartClick = () => setActiveView('start');
@@ -286,6 +171,7 @@ const Study = () => {
 
 	return (
 		<div>
+			<Navbar />
 			<div>
 				<button onClick={handleStartClick}>Start</button>
 				<button onClick={handleFinishClick}>Finish</button>
@@ -295,7 +181,7 @@ const Study = () => {
 			<div>
 				{activeView === 'start' && <StartCard partner={partner} />}
 				{activeView === 'finish' && <FinishCard partner={partner} />}
-			    {activeView === 'current' && <CurrentCards />}
+				{activeView === 'current' && <CurrentCards />}
 			</div>
 		</div>
 	);
