@@ -18,9 +18,9 @@
 .outer-container {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   width: 1110px;
-  height: 640px;
+  height: 730px;
 }
 
 .users {

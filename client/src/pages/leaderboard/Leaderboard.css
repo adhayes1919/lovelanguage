@@ -1,3 +1,13 @@
+.leaderboard-page-wrap{
+  /* HOME-CODE */
+position: relative;
+width: 1280px;
+height: 832px;
+background: #FF5400;
+
+}
+
+
 .topstep {
   display: flex;
   top: 155.57px;
@@ -13,4 +23,95 @@
   height: 113.56px;
   top: 264.43px;
   background-color: #FFEFB8;
+}
+
+/* Union */
+.leaderboard-steps{
+  box-sizing: border-box;
+  position: absolute;
+  left: 316px;
+  top: 155.57px;
+}
+
+
+.user-left-first{
+box-sizing: border-box;
+border-radius: 80px;
+position: absolute;
+width: 121px;
+height: 121px;
+left: 568px;
+top: 23px;
+
+background: #3AAB2F;
+border: 3px solid #000000;
+
+}
+
+
+.user-right-first{
+/* Ellipse 22 */
+
+box-sizing: border-box;
+border-radius: 80px;
+
+position: absolute;
+width: 121px;
+height: 121px;
+left: 519px;
+top: 23px;
+
+background: #FEC500;
+border: 3px solid #000000;
+}
+
+.user-left-second {
+border-radius: 80px;
+box-sizing: border-box;
+position: absolute;
+width: 114px;
+height: 114px;
+left: 379px;
+top: 145px;
+
+background: #FF4B4E;
+border: 3px solid #000000;
+}
+
+.user-right-second {
+box-sizing: border-box;
+border-radius: 80px;
+position: absolute;
+width: 114px;
+height: 114px;
+left: 333px;
+top: 145px;
+background: #B5772B;
+border: 3px solid #000000;
+}
+
+.user-left-third{
+box-sizing: border-box;
+border-radius: 80px;
+position: absolute;
+width: 114px;
+height: 114px;
+left: 775px;
+top: 145px;
+background: #FEC500;
+border: 3px solid #000000;
+
+}
+
+.user-right-third {
+box-sizing: border-box;
+border-radius: 80px;
+position: absolute;
+width: 114px;
+height: 114px;
+left: 728px;
+top: 145px;
+background: #EA5E6F;
+border: 3px solid #000000;
+
 }

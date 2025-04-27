@@ -185,14 +185,26 @@ const FinishCard = ({ partner }) => {
     );
 };
 
-const Study = () => {
+const Study = ({setNavbarHidden}) => {
     const partner = 'partners-name'; // TODO: DB query
     const [activeView, setActiveView] = useState(null);
 
-    const handleStartClick = () => setActiveView('start');
-    const handleFinishClick = () => setActiveView('finish');
-    const handleCurrentClick = () => setActiveView('current');
-    const handleBackClick = () => setActiveView(null);
+    const handleStartClick = () => {
+        setActiveView('start');
+        if (setNavbarHidden) setNavbarHidden(false);
+      };
+      const handleFinishClick = () => {
+        setActiveView('finish');
+        if (setNavbarHidden) setNavbarHidden(false);
+      };
+      const handleCurrentClick = () => {
+        setActiveView('current');
+        if (setNavbarHidden) setNavbarHidden(true);  // Hide navbar when 'current'
+      };
+      const handleBackClick = () => {
+        setActiveView(null);
+        if (setNavbarHidden) setNavbarHidden(false);
+      };
 
     return (
         <div className='study-page'>

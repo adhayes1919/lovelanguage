@@ -8,6 +8,7 @@ import Study from './Study.jsx';
 const Home = () => {
     const [isLoggedIn, setLoggedIn] = useState(true);
     const [isPairedPartner, setPairedPartner] = useState(true);
+    const [isNavbarHidden, setIsNavbarHidden] = useState(false);
     /*
     useEffect(() => {
         setLoggedIn(document.cookie.includes('username='));
@@ -43,9 +44,9 @@ const Home = () => {
     return (
         <div>
             <div className='home-page-wrap'>
-                <Study />
+                <Study setNavbarHidden={setIsNavbarHidden}/>
+                <Navbar hidden={isNavbarHidden}/>
             </div>
-            <Navbar />
         </div>
     )
 }

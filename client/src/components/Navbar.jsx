@@ -1,18 +1,39 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import './Navbar.css';
 
-const Navbar = () => {
+const Navbar = ({hidden}) => {
+    const location = useLocation();
+    const path = location.pathname;
+
+    // helper function to check active
+    const isActive = (route) => path === route;
+
     return (
-        <div>
-            <nav className="navbar">
-                <div className="nav-links">         
-                    <Link to="/settings"> Settings</Link>
-                    <Link to="/"> Home </Link>
-                    <Link to="/leaderboard"> Leaderboard</Link>
-                    <Link to="/about"> About </Link>
-                </div>
-            </nav>
-        </div>
+        <nav className={`navbar ${hidden ? 'navbar-hidden' : ''}`}>
+            <div className="nav-links">
+                <Link to="/leaderboard">
+                    <img
+                        src='img/leaderboardnavbar.svg'
+                        alt="Leaderboard"
+                        className={isActive('/leaderboard') ? "nav-icon active" : "nav-icon"}
+                    />
+                </Link>
+                <Link to="/">
+                    <img
+                        src='img/homenavbarheart.svg'
+                        alt="Home"
+                        className={isActive('/') ? "nav-icon active" : "nav-icon"}
+                    />
+                </Link>
+                <Link to="/about">
+                    <img
+                        src='img/aboutnavbar.svg'
+                        alt="About"
+                        className={isActive('/about') ? "nav-icon active" : "nav-icon"}
+                    />
+                </Link>
+            </div>
+        </nav>
     );
 };
 

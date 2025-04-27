@@ -47,8 +47,9 @@ const About = () => {
                     </div>
 
                 </div>
-            </div>
         <Navbar />
+
+            </div>
         </div>
     );
 }
