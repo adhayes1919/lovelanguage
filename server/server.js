@@ -77,6 +77,25 @@ app.post("/api/user_getDetails", async (req, res) => {
 	}
 });
 
+app.post("/api/user_getPartner", async (req, res) => {
+	const { user_id } = req.body;
+
+	try {
+		// Fetch partner details for the user
+		const partnerDetails = await user_getPartner(db, user_id);
+
+		if (partnerDetails.error) {
+			// Send an error response if there's an issue
+			res.status(404).json({ message: partnerDetails.error });
+		} else {
+			// Send partner details if found
+			res.status(200).json(partnerDetails);
+		}
+	} catch (error) {
+		console.error('Error in /getPartner:', error);
+		res.status(500).send('Server error');
+	}
+});
 
 /* DECK COMMANDS */
 
