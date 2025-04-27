@@ -225,12 +225,12 @@ const Study = ({setNavbarHidden}) => {
                             />
                         </Link>
 
-                        <div className="streak-top-container">
+                        <div className="streak-top-container" id="my">
                             <img src="img/my-streak-fire.svg" alt="" />
                             <p>1</p>
                         </div>
 
-                        <div className="streak-top-container" id="my">
+                        <div className="streak-top-container">
                             <img src="img/our-streak-heart.svg" alt="" />
                             <p>1</p>
                         </div>

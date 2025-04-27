@@ -7,12 +7,12 @@ import Study from './Study.jsx';
 
 const Home = () => {
     const [isLoggedIn, setLoggedIn] = useState(true);
-    const [isPairedPartner, setPairedPartner] = useState(true);
+    const [isPairedPartner, setPairedPartner] = useState(false);
     const [isNavbarHidden, setIsNavbarHidden] = useState(false);
-    /*
-    useEffect(() => {
-        setLoggedIn(document.cookie.includes('username='));
-    }, []); // <-- empty array = run once on component mount */
+
+    // useEffect(() => {
+    //     setLoggedIn(document.cookie.includes('username='));
+    // }, []); // <-- empty array = run once on component mount */
 
     //let isLoggedIn = true; //TODO: placeholder to check for user status
 
