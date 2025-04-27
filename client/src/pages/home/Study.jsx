@@ -32,13 +32,16 @@ const CurrentCards = () => {
 
 		flipCard();
 
-		const easeFactor = 2.5; // TODO: initialize this properly
+		const easeFactor = 2.5; // TODO: initialize per card
 		const newEase = calculateEase(easeFactor, feedbackValue);
 		console.log(`new ease factor = ${newEase}`);
 	};
 
 	return (
 		<div>
+			<span>your word</span>
+			<button>Listen</button> {/* TODO: hook up audio */}
+
 			<button onClick={flipCard}>
 				{cardSide === 'front' ? 'Front of card' : 'Back of card'}
 			</button>
@@ -53,8 +56,6 @@ const CurrentCards = () => {
 					{showUndo && <button onClick={undo}>Undo</button>}
 				</div>
 			)}
-
-			<button>Listen</button> {/* TODO: add audio playback */}
 		</div>
 	);
 };
@@ -66,7 +67,7 @@ const StartCard = ({ partner }) => {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		// TODO: actually send to db
+		// TODO: send to DB
 		setFront('');
 		setAudioFile(null);
 		setImageFile(null);
@@ -115,7 +116,7 @@ const FinishCard = ({ partner }) => {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		// TODO: save to db
+		// TODO: send to DB
 	};
 
 	return (
@@ -133,7 +134,6 @@ const FinishCard = ({ partner }) => {
 						value={back}
 						onChange={(e) => setBack(e.target.value)}
 					/>
-
 					<div style={{ marginTop: '10px' }}>
 						Attach audio?
 						<input
@@ -142,7 +142,6 @@ const FinishCard = ({ partner }) => {
 							onChange={(e) => setAudioFile(e.target.files[0])}
 						/>
 					</div>
-
 					<div style={{ marginTop: '10px' }}>
 						Attach image?
 						<input
@@ -151,7 +150,6 @@ const FinishCard = ({ partner }) => {
 							onChange={(e) => setImageFile(e.target.files[0])}
 						/>
 					</div>
-
 					<button type="submit" className="finishcard-submit">
 						Return to {partner}
 					</button>
@@ -171,14 +169,15 @@ const Study = () => {
 
 	return (
 		<div>
-			<Navbar />
 			<div>
-				<button onClick={handleStartClick}>Start</button>
-				<button onClick={handleFinishClick}>Finish</button>
-				<button onClick={handleCurrentClick}>Current Cards</button>
-			</div>
+				{!activeView && (
+					<div className="study-buttons">
+						<button className="study-button" onClick={handleStartClick}>Start</button>
+						<button className="finish-button" onClick={handleFinishClick}>Finish</button>
+						<button className="study-button" onClick={handleCurrentClick}>Current Cards</button>
+					</div>
+				)}
 
-			<div>
 				{activeView === 'start' && <StartCard partner={partner} />}
 				{activeView === 'finish' && <FinishCard partner={partner} />}
 				{activeView === 'current' && <CurrentCards />}
