@@ -1,26 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import './About.css';
 import Navbar from 'components/Navbar';
+//import { 
 
 const About = () => {
   const [userDetails, setUserDetails] = useState(null);
   const userId = '680d86b77788138e202e9956'; // Replace with actual logged-in user's ID or prop/context
 
   useEffect(() => {
-    async function fetchUserDetails() {
-      try {
-        const response = await fetch('http//localhost/10.135.168.95:5000/api/user_getDetails', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ user_id: userId }),
-        });
-        if (!response.ok) throw new Error('Failed to fetch user details');
-        const data = await response.json();
-        setUserDetails(data);
-      } catch (error) {
-        console.error(error);
-      }
-    }
 
     if (userId) fetchUserDetails();
   }, [userId]);

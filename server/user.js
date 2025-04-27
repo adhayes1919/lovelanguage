@@ -1,14 +1,12 @@
-require('dotenv'.config());
-const { MongoClient, ObjectId } = require('mongodb');
-const uri = process.env.MONGO_URI;
-const client = new MongoClient(uri);
+import {ObjectId} from 'mongodb';
 
-async function user_getDetails(db, user_id) {
+export async function user_getDetails(db, user_id) {
     try {
         const users = db.collection('users');
 
-        const result = users.findOne({ _id : new ObjectId(user_id)});
+        const result = await users.findOne({ _id : new ObjectId(user_id)});
 
+        console.log(`raw result: ${result}`);
         if (result) {
             console.log("Successfully got user details");
             return result;
@@ -22,7 +20,7 @@ async function user_getDetails(db, user_id) {
 }
 
 // gets the partner that the specified user is in a partnership with if one exists
-async function user_getPartner(db, user_id) {
+export async function user_getPartner(db, user_id) {
 	try{
 		const users = db.collection('users');
 		const partnerships = db.collection('partnerships');

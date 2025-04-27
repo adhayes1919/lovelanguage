@@ -21,4 +21,3 @@ export async function loginUser(userData) {
 	}
 	return data;
 }
-
