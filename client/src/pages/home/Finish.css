@@ -107,6 +107,9 @@
 
 /* Input area (textarea) */
 .finishcard-textarea {
+  outline: none;
+  text-align: center;
+  resize: none;
   width: 100%;
   min-height: 80px;
   font-family: 'Pixelify Sans', sans-serif;

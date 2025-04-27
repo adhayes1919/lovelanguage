@@ -98,6 +98,7 @@
 }
 
 .startcard-textarea {
+  outline: none;
   background-color: transparent;
   border: none;
   font-size: 70px;
