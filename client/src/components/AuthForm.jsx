@@ -1,9 +1,10 @@
+import './Navbar.css'
 import { useState } from 'react';
 import { loginUser, registerUser } from 'utils/auth.js';
-import { useNavigate } from 'react-router-dom'; 
+import { useNavigate } from 'react-router-dom';
 
 const AuthForm = () => {
-	const [isLoginView, setIsLoginView] = useState(true);
+	const [isLoginView, setIsLoginView] = useState(false);
 
 	return (
 		<div>
@@ -43,12 +44,15 @@ const Login = ({ switchToRegister }) => {
 		<div>
 			<form onSubmit={handleSubmit}>
 				<input name="username" onChange={handleChange} placeholder="Username" />
+				<input name="name" onChange={handleChange} placeholder="Your name" />
 				<input name="password" type="password" onChange={handleChange} placeholder="Password" />
-				<button type="submit">Login</button>
+				<input name="confirmPassword" type="password" onChange={handleChange} placeholder="Confirm Password" />
+				<input name="language" onChange={handleChange} placeholder="Language" />
+				<button type="submit">Register</button>
 			</form>
 			<p>
-				Don't have an account?{' '}
-				<button onClick={switchToRegister}>Register here</button>
+				Already have an account?{' '}
+				<button onClick={switchToRegister}>Login here</button>
 			</p>
 		</div>
 	);
@@ -89,22 +93,27 @@ const Register = ({ switchToLogin }) => {
 	};
 
 	return (
-		<div>
-			<form onSubmit={handleSubmit}>
+<div className="auth-page-wrap">
+	<div className="auth-main-container">
+		<div className="auth-name-and-form">
+			<h1 className="auth-h1" >Sign Up</h1>
+			<form className="auth-form" onSubmit={handleSubmit}>
+				<input name="name" onChange={handleChange} placeholder="Your Name" />
 				<input name="username" onChange={handleChange} placeholder="Username" />
-				<input name="name" onChange={handleChange} placeholder="Your name" />
 				<input name="password" type="password" onChange={handleChange} placeholder="Password" />
-				<input name="confirmPassword" type="password" onChange={handleChange} placeholder="Confirm Password" />
-				<input name="language" onChange={handleChange} placeholder="Language" />
-				<button type="submit">Register</button>
 			</form>
-			<p>
-				Already have an account?{' '}
-				<button onClick={switchToLogin}>Login here</button>
-			</p>
+			<button className="auth-CTA-button">Register</button>
 		</div>
+
+
+		<div className="auth-bottom-text">
+				<p>Already have an account?</p>
+				<p id="go-to-logIn" onClick={switchToLogin} >Log In Here</p>
+		</div>
+	</div>
+
+</div>
 	);
 };
 
 export default AuthForm;
-
