@@ -111,3 +111,13 @@
 .save-button:hover {
   background-color: #ff8686;
 }
+
+
+.logout-button {
+  background-color: #8d8686;
+}
+
+.setting-bottom-button{
+  display: flex;
+  justify-content: space-around;
+}

@@ -1,0 +1,53 @@
+.landing-page-wrap{
+  position: relative;
+  width: 1280px;
+  height: 832px;
+  background: #FFBDBD;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.landing-page-wrap h1 {
+  margin: 0;
+  font-family: 'Pixelify Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 80px;
+  line-height: 96px;
+  color: #000000;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+
+
+.landing-page-wrap button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 333px;
+  height: 70px;
+  background: #FE6566;
+  border: 4px solid #000000;
+  border-radius: 20px;
+  font-family: 'Pixelify Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 40px;
+  line-height: 48px; /* line-height can remain for fallback */
+  color: #000000;
+  cursor: pointer;
+}
+
+
+.landing-content {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  text-align: ce;
+}

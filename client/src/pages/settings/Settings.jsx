@@ -49,6 +49,12 @@ const Settings = () => {
     setPreviewPic(URL.createObjectURL(file)); // show preview immediately
   };
 
+  function handleLogout() {
+    document.cookie = "username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    console.log('Logged out.');
+    window.location.reload();
+}
+
   // Handle form submission: send updated data to backend
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -159,9 +165,15 @@ const Settings = () => {
             />
           </label>
 
-          <button type="submit" className="save-button">
-            Save Changes
-          </button>
+            <div className="setting-bottom-button">
+                <button onClick={handleLogout} type="submit" className="logout-button save-button">
+                    Log Out
+                </button>
+                <button type="submit" className="save-button">
+                    Save Changes
+                </button>
+            </div>
+
         </form>
       </div>
     </div>

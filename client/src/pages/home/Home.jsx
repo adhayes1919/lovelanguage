@@ -4,6 +4,7 @@ import AuthForm from 'components/AuthForm';
 import Navbar from 'components/Navbar';
 import { AddPartner, AddCouple } from './Pair.jsx';
 import Study from './Study.jsx';
+import Landing from "../landing/Landing.jsx";
 
 const Home = () => {
     const [isLoggedIn, setLoggedIn] = useState(true);
@@ -44,6 +45,7 @@ const Home = () => {
     return (
         <div>
             <div className='home-page-wrap'>
+                {/* <Landing/> */}
                 <Study setNavbarHidden={setIsNavbarHidden}/>
                 <Navbar hidden={isNavbarHidden}/>
             </div>
