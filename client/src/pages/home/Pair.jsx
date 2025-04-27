@@ -1,8 +1,3 @@
-import './Home.css';
-
-//both couplepair and pair friends
-
-
 export const AddPartner = () => {
     const Temp = (e) => {
         e.preventDefault();
@@ -19,11 +14,3 @@ export const AddPartner = () => {
     )
 
 }
-
-export const AddCouple = () => {
-    return (
-        <div>
-        </div>
-    )
-}
-

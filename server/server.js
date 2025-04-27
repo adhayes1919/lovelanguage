@@ -4,7 +4,7 @@ dotenv.config();
 import express from 'express';
 import cors from 'cors';
 import { MongoClient } from 'mongodb';
-import { user_getDetails } from './user.js';
+import { user_getDetails, user_getPartner } from './user.js';
 import ISO6391 from 'iso-639-1';
 import { registerUser, loginUser } from './auth.js';
 import { addPoints, incrementStreak, getLeaderboard } from './scoring.js';
@@ -34,17 +34,16 @@ const PORT = process.env.PORT || 5000;
 /* --- AUTH ROUTES --- */
 
 app.post("/api/auth/register", async (req, res) => {
-	const { username, password, confirmPassword, name, language } = req.body;
-
+	const { name, language, username, password, confirmPassword } = req.body;
 	if (password !== confirmPassword) {
 		return res.status(400).json({ success: false, message: 'Passwords do not match' });
 	}
 	if (!ISO6391.validate(language)) {
-		return res.status(400).json({ success: false, message: 'Invalid language.' });
+		return res.status(400).json({ success: false, message: `Invalid language. Received: ${language} `});
 	}
 
 	try {
-		const result = await registerUser(db, username, password, confirmPassword, name, language);
+		const result = await registerUser(db, name, language, username, password, confirmPassword);
 		if (!result.success) {
 			return res.status(400).json({ success: false, message: result.message });
 		}
@@ -228,12 +227,16 @@ app.post("/api/leaderboard", async (req, res) => {
 });
 
 /* --- PARTNERSHIP ROUTES --- */
-
 app.post("/api/partner/find-match", async (req, res) => {
 	const { userA_id, searchMatchCode } = req.body;
 	try {
-		await couple_findMatch(db, userA_id, searchMatchCode);
-		res.status(200).send('Partnership created successfully');
+		const result = await couple_findMatch(db, userA_id, searchMatchCode);
+
+		if (result.success) {
+			res.status(200).json({ success: true, message: 'Partnership created successfully' });
+		} else {
+			res.status(400).json({ success: false, message: result.message });
+		}
 	} catch (error) {
 		console.error('Error in /partner/find-match:', error);
 		res.status(500).send('Server error');

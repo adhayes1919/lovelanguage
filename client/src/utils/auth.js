@@ -1,4 +1,4 @@
-import { setCookie } from 'utils/cookies'; // ✅ import your new utility
+import { setCookie } from 'utils/cookies'; 
 
 export async function registerUser(userData) {
 	const response = await fetch('/api/auth/register', {
@@ -21,7 +21,7 @@ export async function loginUser(userData) {
 	const data = await response.json();
 	if (data.success) {
 		console.log('Login success, setting cookie!');
-		setCookie('userId', data.userId); // ✅ now using your setCookie()
+		setCookie('userId', data.userId); 
 	}
 
 	return data;

@@ -4,47 +4,55 @@ import { getCookie, deleteCookie } from 'utils/cookies';
 import AuthForm from 'components/AuthForm';
 import Navbar from 'components/Navbar';
 import { AddPartner } from './Pair.jsx'; 
-import { fetchPartnerDetails } from 'utils/user'; 
+import { fetchPartnerDetails, fetchUserDetails } from 'utils/user'; 
 import Study from './Study.jsx';
 
 const Home = () => {
-    const [isLoggedIn, setLoggedIn] = useState(true);
-    const [isPairedPartner, setPairedPartner] = useState(true);
+    const [isLoggedIn, setLoggedIn] = useState(false);
+    const [isPairedPartner, setPairedPartner] = useState(false);
 
     useEffect(() => {
-        const id = getCookie('userId');
-        setLoggedIn(!!id); // true if exists, false otherwise
-            if (id) {
-                checkPartnerStatus(id);
-        }
-    }, []);
+        async function initialize() {
+            const id = getCookie('userId');
 
-    //dummy function since can't set partner yet
-    async function checkPartnerStatus(userId) {
-        return true;
-    }
-    /* handles checking if user has a partner yet
+            if (id) {
+                const userData = await fetchUserDetails(id);
+                if (userData) {
+                    setLoggedIn(true);
+                    await checkPartnerStatus(id);
+                } else {
+                    console.log("Invalid session or cookie missing user.");
+                    forceLogout();
+                }
+            } else {
+                console.log("No cookie found.");
+                forceLogout();
+            }
+        }
+        initialize();
+    }, []);
     async function checkPartnerStatus(userId) {
         try {
-            const partnerDetails = await fetchPartnerDetails(userId);
-            if (partnerDetails) {
-                setPairedPartner(true); // Partner found
+            const partnerCheck = await fetchPartnerDetails(userId);
+            if (partnerCheck && partnerCheck.success && partnerCheck.partnerDetails) {
+                setPairedPartner(true);
             } else {
-                setPairedPartner(false); // No partner
+                setPairedPartner(false);
             }
         } catch (error) {
             console.error('Error checking partner status:', error);
             setPairedPartner(false);
         }
     }
-    */
-
-    function handleLogout() {
-        deleteCookie('userId');  
-        console.log('Logged out.');
+    function forceLogout() {
+        deleteCookie('userId');
         setLoggedIn(false);
+        setPairedPartner(false);
     }
-
+    function handleLogout() {
+        console.log('User manually logged out.');
+        forceLogout();
+    }
     if (!isLoggedIn) {
         return (
             <div>
@@ -52,13 +60,11 @@ const Home = () => {
             </div>
         );
     }
-
     if (!isPairedPartner) {
         return (
             <AddPartner />
         );
     }
-
     return (
         <div>
             <div className='home-page-wrap'>
@@ -68,6 +74,5 @@ const Home = () => {
         </div>
     );
 };
-
 export default Home;
 

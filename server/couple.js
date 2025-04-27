@@ -1,51 +1,52 @@
-//import {ObjectId} from 'mongodb';
+import { ObjectId } from 'mongodb';
 
+export async function couple_findMatch(db, userA_id, searchMatchCode) {
+    try {
+        const users = db.collection('users');
+        const partnerships = db.collection('partnerships');
 
-export async function couple_findMatch(db, userA_id, searchMatchCode){
-	// create a partnership entry that records both members and other details
-	try{
-		const users = db.collection('users');
-		const partnerships = db.collection('partnerships');
+        const userA = await users.findOne({ _id: new ObjectId(userA_id) });
+        if (!userA) {
+            console.log('User A not found.');
+            return { success: false, message: 'User not found.' };
+        }
 
-		const userA = await users.findOne({ _id: new ObjectId(userA_id) });
-		if (!userA) {
-			console.log('User A not found.');
-			return;
-		}
+        // Attempt to find and lock User B (must be not in partnership yet)
+        const updateResult = await users.updateOne(
+            { matchCode: searchMatchCode, inPartnership: false },
+            { $set: { inPartnership: true } }
+        );
 
-		// Try to lock userB by setting inPartnership: true if free
-		const updateResult = await users.updateOne(
-			{ matchCode: searchMatchCode, inPartnership: false },
-			{ $set: { inPartnership: true } }
-		);
+        if (updateResult.matchedCount === 0) {
+            console.log('No available user found with that match code.');
+            return { success: false, message: 'Invalid or already taken match code.' };
+        }
 
-		if (updateResult.matchedCount === 0) {
-			console.log('No available user found with that match code.');
-			return;
-		}
+        // Fetch User B after update
+        const userB = await users.findOne({ matchCode: searchMatchCode });
+        if (!userB) {
+            console.log('Unexpected: userB updated but not found.');
+            return { success: false, message: 'Partner lookup failed.' };
+        }
 
-		// Now fetch userB
-		const userB = await users.findOne({ matchCode: searchMatchCode });
-		if (!userB) {
-			console.log('Unexpected: user updated but not found');
-			return;
-		}
+        // Create partnership document
+        await partnerships.insertOne({
+            user1_id: userA._id,
+            user2_id: userB._id,
+            createdAt: new Date(),
+        });
 
-		await partnerships.insertOne({
-			user1_id: userA._id,
-			user2_id: userB._id,
-			createdAt:new Date()
-		})
+        // Mark User A as in a partnership too
+        await users.updateOne(
+            { _id: userA._id },
+            { $set: { inPartnership: true } }
+        );
 
-		//also update userA
-		await users.updateOne(
-			{ _id: userA._id },
-			{ $set: { inPartnership: true } }
-		);
-
-		console.log('Partnership created');
-	} catch (error) {
-		console.error('Error creating partnership:  ', error);	
-	} 
+        console.log('Partnership successfully created!');
+        return { success: true };
+    } catch (error) {
+        console.error('Error creating partnership: ', error);
+        return { success: false, message: 'Server error' };
+    }
 }
 

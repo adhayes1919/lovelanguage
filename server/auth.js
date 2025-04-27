@@ -32,7 +32,7 @@ export async function loginUser(db, username, password) {
 }
 
 // Register user
-export async function registerUser(db, username, password, confirmPassword, name, language) {
+export async function registerUser(db, name, language, username, password, confirmPassword) {
 	try {
 		const users = db.collection('users');
 
