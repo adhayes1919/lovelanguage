@@ -4,14 +4,8 @@ dotenv.config();
 import express from 'express';
 import cors from 'cors';
 import { MongoClient } from 'mongodb';
-import registerUser from './registeruser.js';
-import { deck_upsertCardBack, deck_updateCardEase, deck_requestCard, deck_getRequestsReceived, deck_getFullDeck, deck_getCardInfo } from './deck.js';
-import getLeaderboard from './leaderboard.js';
-import { incrementStreak, addPoints } from './couple.js'
-import loginUser from './loginuser.js';
-import user_getDetails from './user.js';
+import { user_getDetails, user_getPartner } from './user.js';
 import ISO6391 from 'iso-639-1';
-
 import { registerUser, loginUser } from './auth.js';
 import { addPoints, incrementStreak, getLeaderboard } from './scoring.js';
 import { couple_findMatch } from './couple.js';
@@ -40,17 +34,16 @@ const PORT = process.env.PORT || 5000;
 /* --- AUTH ROUTES --- */
 
 app.post("/api/auth/register", async (req, res) => {
-	const { username, password, confirmPassword, name, language } = req.body;
-
+	const { name, language, username, password, confirmPassword } = req.body;
 	if (password !== confirmPassword) {
 		return res.status(400).json({ success: false, message: 'Passwords do not match' });
 	}
 	if (!ISO6391.validate(language)) {
-		return res.status(400).json({ success: false, message: 'Invalid language.' });
+		return res.status(400).json({ success: false, message: `Invalid language. Received: ${language} `});
 	}
 
 	try {
-		const result = await registerUser(db, username, password, confirmPassword, name, language);
+		const result = await registerUser(db, name, language, username, password, confirmPassword);
 		if (!result.success) {
 			return res.status(400).json({ success: false, message: result.message });
 		}
@@ -64,27 +57,31 @@ app.post("/api/auth/register", async (req, res) => {
 app.post("/api/auth/login", async (req, res) => {
 	const { username, password } = req.body;
 	try {
-		const success = await loginUser(db, username, password);
-		if (!success) {
+		const result = await loginUser(db, username, password);
+
+		if (!result.success) {
 			return res.status(401).json({ success: false, message: 'Incorrect username or password' });
 		}
-		res.status(200).json({ success: true, message: 'Login successful' });
+
+		// Attach the userId to the success response
+		res.status(200).json({ 
+			success: true, 
+			message: 'Login successful', 
+			userId: result.userId.toString() 
+		});
 	} catch (error) {
 		console.error('Error logging in:', error);
 		res.status(500).json({ success: false, message: 'Server error' });
 	}
 });
 
-<<<<<<< HEAD
-/* --- DECK ROUTES --- */
-=======
 /* USER COMMANDS */
 
-app.post("/api/user_getDetails", async (req, res) => {
+app.post("/api/user-getDetails", async (req, res) => {
 	const { user_id } = req.body;
-
 	try {
 		const userDetails = await user_getDetails(db, user_id);
+        console.log(userDetails);
 		if (userDetails) {
 			res.status(200).json(userDetails);
 		} else {
@@ -96,7 +93,7 @@ app.post("/api/user_getDetails", async (req, res) => {
 	}
 });
 
-app.post("/api/user_getPartner", async (req, res) => {
+app.post("/api/user-getPartner", async (req, res) => {
 	const { user_id } = req.body;
 
 	try {
@@ -117,7 +114,6 @@ app.post("/api/user_getPartner", async (req, res) => {
 });
 
 /* DECK COMMANDS */
->>>>>>> 4d993badafffce3c14ebfeae7c1d346ba1eafde4
 
 app.post("/api/deck/upsert-card-back", async (req, res) => {
 	const { user_id, txt_front, txt_back } = req.body;
@@ -231,12 +227,16 @@ app.post("/api/leaderboard", async (req, res) => {
 });
 
 /* --- PARTNERSHIP ROUTES --- */
-
 app.post("/api/partner/find-match", async (req, res) => {
 	const { userA_id, searchMatchCode } = req.body;
 	try {
-		await couple_findMatch(db, userA_id, searchMatchCode);
-		res.status(200).send('Partnership created successfully');
+		const result = await couple_findMatch(db, userA_id, searchMatchCode);
+
+		if (result.success) {
+			res.status(200).json({ success: true, message: 'Partnership created successfully' });
+		} else {
+			res.status(400).json({ success: false, message: result.message });
+		}
 	} catch (error) {
 		console.error('Error in /partner/find-match:', error);
 		res.status(500).send('Server error');

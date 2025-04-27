@@ -1,45 +1,70 @@
 import './Home.css';
 import { useState, useEffect } from 'react';
+import { getCookie, deleteCookie } from 'utils/cookies'; 
 import AuthForm from 'components/AuthForm';
 import Navbar from 'components/Navbar';
-import { AddPartner, AddCouple } from './Pair.jsx';
+import { AddPartner } from './Pair.jsx'; 
+import { fetchPartnerDetails, fetchUserDetails } from 'utils/user'; 
 import Study from './Study.jsx';
 
 const Home = () => {
-    const [isLoggedIn, setLoggedIn] = useState(true);
-    const [isPairedPartner, setPairedPartner] = useState(true);
-    /*
+    const [isLoggedIn, setLoggedIn] = useState(false);
+    const [isPairedPartner, setPairedPartner] = useState(false);
+
     useEffect(() => {
-        setLoggedIn(document.cookie.includes('username='));
-    }, []); // <-- empty array = run once on component mount */
+        async function initialize() {
+            const id = getCookie('userId');
 
-    //let isLoggedIn = true; //TODO: placeholder to check for user status
-
+            if (id) {
+                const userData = await fetchUserDetails(id);
+                if (userData) {
+                    setLoggedIn(true);
+                    await checkPartnerStatus(id);
+                } else {
+                    console.log("Invalid session or cookie missing user.");
+                    forceLogout();
+                }
+            } else {
+                console.log("No cookie found.");
+                forceLogout();
+            }
+        }
+        initialize();
+    }, []);
+    async function checkPartnerStatus(userId) {
+        try {
+            const partnerCheck = await fetchPartnerDetails(userId);
+            if (partnerCheck && partnerCheck.success && partnerCheck.partnerDetails) {
+                setPairedPartner(true);
+            } else {
+                setPairedPartner(false);
+            }
+        } catch (error) {
+            console.error('Error checking partner status:', error);
+            setPairedPartner(false);
+        }
+    }
+    function forceLogout() {
+        deleteCookie('userId');
+        setLoggedIn(false);
+        setPairedPartner(false);
+    }
+    function handleLogout() {
+        console.log('User manually logged out.');
+        forceLogout();
+    }
     if (!isLoggedIn) {
-        console.log(isLoggedIn);
         return (
             <div>
-                <AuthForm />
+                <AuthForm setLoggedIn={setLoggedIn} />
             </div>
         );
     }
-
     if (!isPairedPartner) {
         return (
             <AddPartner />
-        )
+        );
     }
-
-    //<button onClick={handleLogout}>Logout</button>
-
-    function handleLogout() {
-        document.cookie = "username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-        console.log('Logged out.');
-        window.location.reload();
-    }
-
-
-    //Actual main home page here
     return (
         <div>
             <div className='home-page-wrap'>
@@ -47,7 +72,7 @@ const Home = () => {
             </div>
             <Navbar />
         </div>
-    )
-}
-
+    );
+};
 export default Home;
+
