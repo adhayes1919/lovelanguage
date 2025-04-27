@@ -49,4 +49,3 @@ export async function couple_findMatch(db, userA_id, searchMatchCode){
 	} 
 }
 
-//couple_findMatch(process.argv[2], process.argv[3]).catch(console.dir);

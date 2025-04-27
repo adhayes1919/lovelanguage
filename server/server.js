@@ -4,6 +4,12 @@ dotenv.config();
 import express from 'express';
 import cors from 'cors';
 import { MongoClient } from 'mongodb';
+import registerUser from './registeruser.js';
+import { deck_upsertCardBack, deck_updateCardEase, deck_requestCard, deck_getRequestsReceived, deck_getFullDeck, deck_getCardInfo } from './deck.js';
+import getLeaderboard from './leaderboard.js';
+import { incrementStreak, addPoints } from './couple.js'
+import loginUser from './loginuser.js';
+import user_getDetails from './user.js';
 import ISO6391 from 'iso-639-1';
 
 import { registerUser, loginUser } from './auth.js';
@@ -69,7 +75,49 @@ app.post("/api/auth/login", async (req, res) => {
 	}
 });
 
+<<<<<<< HEAD
 /* --- DECK ROUTES --- */
+=======
+/* USER COMMANDS */
+
+app.post("/api/user_getDetails", async (req, res) => {
+	const { user_id } = req.body;
+
+	try {
+		const userDetails = await user_getDetails(db, user_id);
+		if (userDetails) {
+			res.status(200).json(userDetails);
+		} else {
+			res.status(404).send('User not found');
+		}
+	} catch (error) {
+		console.error('Error in /user_getDetails:', error);
+		res.status(500).send('Server error');
+	}
+});
+
+app.post("/api/user_getPartner", async (req, res) => {
+	const { user_id } = req.body;
+
+	try {
+		// Fetch partner details for the user
+		const partnerDetails = await user_getPartner(db, user_id);
+
+		if (partnerDetails.error) {
+			// Send an error response if there's an issue
+			res.status(404).json({ message: partnerDetails.error });
+		} else {
+			// Send partner details if found
+			res.status(200).json(partnerDetails);
+		}
+	} catch (error) {
+		console.error('Error in /getPartner:', error);
+		res.status(500).send('Server error');
+	}
+});
+
+/* DECK COMMANDS */
+>>>>>>> 4d993badafffce3c14ebfeae7c1d346ba1eafde4
 
 app.post("/api/deck/upsert-card-back", async (req, res) => {
 	const { user_id, txt_front, txt_back } = req.body;
