@@ -1,12 +1,12 @@
+require('dotenv'.config());
 const { MongoClient, ObjectId } = require('mongodb');
-
-const uri = 'mongodb://10.135.168.95:27017';
+const uri = process.env.MONGO_URI;
 const client = new MongoClient(uri);
 
-async function deck_upsertCardBack(user_id, txt_front, txt_back){
+async function deck_upsertCardBack(db, user_id, txt_front, txt_back){
 	try {
-		await client.connect();
-		const db = client.db('lovelang');
+		// await client.connect();
+		// const db = client.db('lovelang');
 		const users = db.collection('users');
 		
 		const updateResult = await users.updateOne(
@@ -28,10 +28,8 @@ async function deck_upsertCardBack(user_id, txt_front, txt_back){
 	}
 }
 
-async function deck_updateCardEase(user_id, txt_front, score) {
+async function deck_updateCardEase(db, user_id, txt_front, score) {
 	try {
-		await client.connect();
-		const db = client.db('lovelang');
 		const users = db.collection('users');
 
 		const updateResult = await users.updateOne(
@@ -49,10 +47,8 @@ async function deck_updateCardEase(user_id, txt_front, score) {
 	}
 }
 
-async function deck_requestCard(userA_id, txt_request){
+async function deck_requestCard(db, userA_id, txt_request){
 	try {
-		await client.connect();
-		const db = client.db('lovelang');
 		const users = db.collection('users');
 		const partnerships = db.collection('partnerships');
 		const requests = db.collection('requests');
@@ -95,10 +91,8 @@ async function deck_requestCard(userA_id, txt_request){
 	}
 }
 
-async function deck_getRequestsReceived(user_id) {
+async function deck_getRequestsReceived(db, user_id) {
 	try {
-		await client.connect();
-		const db = client.db('lovelang');
 		const requests = db.collection('requests');
 
 		const requestsReceived = await requests.find({ recipient_id: new ObjectId(user_id) }).toArray();
@@ -109,10 +103,8 @@ async function deck_getRequestsReceived(user_id) {
 	}
 }
 
-async function deck_getFullDeck(user_id) {
+async function deck_getFullDeck(db, user_id) {
 	try {
-		await client.connect();
-		const db = client.db('lovelang');
 		const users = db.collection('users');
 
 		const userFound = await users.findOne({'_id': new ObjectId(user_id)});
@@ -129,10 +121,8 @@ async function deck_getFullDeck(user_id) {
 	}
 }
 
-async function deck_getCardInfo(user_id, txt_front) {
+async function deck_getCardInfo(db, user_id, txt_front) {
 	try {
-		await client.connect();
-		const db = client.db('lovelang');
 		const users = db.collection('users');
 
 		const userFound = await users.findOne(

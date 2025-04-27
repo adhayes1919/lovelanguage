@@ -3,11 +3,9 @@ const { MongoClient, ObjectId } = require('mongodb');
 const uri = 'mongodb://10.135.168.95:27017';
 const client = new MongoClient(uri);
 
-async function getLeaderboard(mode, limit=10) {
+async function getLeaderboard(db, mode, limit=10) {
     try {
-        await client.connect;
-        const db = client.db('lovelang');
-		const users = db.collection('users');
+        const users = db.collection('users');
 		const partnerships = db.collection('partnerships');
 
         let pipeline;

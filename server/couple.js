@@ -3,11 +3,9 @@ const { MongoClient, ObjectId } = require('mongodb');
 const uri = 'mongodb://10.135.168.95:27017';
 const client = new MongoClient(uri);
 
-async function couple_findMatch(userA_id, searchMatchCode){
+async function couple_findMatch(db, userA_id, searchMatchCode){
 	// create a partnership entry that records both members and other details
 	try{
-		await client.connect();
-		const db = client.db('lovelang');
 		const users = db.collection('users');
 		const partnerships = db.collection('partnerships');
 

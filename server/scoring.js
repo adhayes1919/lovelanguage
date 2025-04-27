@@ -3,10 +3,8 @@ const { MongoClient, ObjectId } = require('mongodb');
 const uri = 'mongodb://10.135.168.95:27017';
 const client = new MongoClient(uri);
 
-async function addPoints(user_id, count) {
+async function addPoints(db, user_id, count) {
 	try {
-		await client.connect();
-		const db = client.db('lovelang');
 		const users = db.collection('users');
 
 		const updateResult = await users.updateOne(
@@ -24,10 +22,8 @@ async function addPoints(user_id, count) {
 	}
 }
 
-async function incrementStreak(user_id) {
+async function incrementStreak(db, user_id) {
 	try {
-		await client.connect();
-		const db = client.db('lovelang');
 		const users = db.collection('users');
 
 		const updateResult = await users.updateOne(
