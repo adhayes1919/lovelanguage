@@ -39,9 +39,21 @@ const About = () => {
                         </div>
 
                         <div className="cards">
-                            <div className="card-one"> </div>
+                            <div className="card-one">
+                                <div className="white-container">
+                                    <h1>43</h1>
+                                    <img src="img/deck-of-cards-icon.svg" alt="" />
+                                </div>
+                                <h4>My Cards</h4>
+                            </div>
 
-                            <div className="card-two"> </div>
+                            <div className="card-two">
+                            <div className="white-container">
+                                    <h1>19</h1>
+                                    <img src="img/deck-of-cards-icon.svg" alt="" />
+                                </div>
+                                <h4>Ayden's Cards</h4>
+                            </div>
 
                         </div>
                     </div>

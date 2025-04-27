@@ -7,7 +7,7 @@ import Study from './Study.jsx';
 
 const Home = () => {
     const [isLoggedIn, setLoggedIn] = useState(true);
-    const [isPairedPartner, setPairedPartner] = useState(false);
+    const [isPairedPartner, setPairedPartner] = useState(true);
     const [isNavbarHidden, setIsNavbarHidden] = useState(false);
 
     // useEffect(() => {

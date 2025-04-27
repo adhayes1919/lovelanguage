@@ -238,7 +238,7 @@ const Study = ({setNavbarHidden}) => {
 
                     <div className="study-button" onClick={handleCurrentClick}>
                         <div >
-                            <p className="user1-points">00000</p>
+                            <p className="user1-points">000</p>
                             <img src="img/points-star.svg" alt="" />
                         </div>
                         <h2>Study</h2>
