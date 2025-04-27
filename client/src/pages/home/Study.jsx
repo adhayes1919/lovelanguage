@@ -44,22 +44,11 @@ const CurrentCards = () => {
 const Study = () => {
     const partner = "partners-name"; //TODO: DB query
 
-    const [showStart, setShowStart] = useState(false);
-    const [showFinish, setShowFinish] = useState(false);
+    const [activeView, setActiveView] = useState(null);
 
-    const handleStartClick = () => {
-        if (showFinish) {
-            setShowFinish(false)
-        }
-        setShowStart(true);
-    }
-
-    const handleFinishClick = () => {
-        if (showStart) {
-            setShowStart(false)
-        }
-        setShowFinish(true);
-    }
+    const handleStartClick = () => setActiveView('start');
+    const handleFinishClick = () => setActiveView('finish');
+    const handleCurrentClick = () => setActiveView('current')
 
     const StartCard = () => {
         const [front, setFront] = useState('');
@@ -156,15 +145,15 @@ const Study = () => {
 
     return (
         <div>
-            Create page
             <div>
-                <button onClick = {handleStartClick}> send cards </button>
-                <button onClick = {handleFinishClick}> load partner's cards </button>
-                {showStart && <StartCard /> }
-                {showFinish && <FinishCard /> }
-                <CurrentCards />
+              <button onClick={handleStartClick}>Start</button>
+              <button onClick={handleFinishClick}>Finish</button>
+              <button onClick={handleCurrentClick}>Current Cards</button>
+
+              {activeView === 'start' && <StartCard />}
+              {activeView === 'finish' && <FinishCard />}
+              {activeView === 'current' && <CurrentCards />}
             </div>
-                <Navbar />
         </div>
     );
 };
