@@ -118,11 +118,11 @@
 
 /* Submit button */
 .finishcard-submit {
-  margin-top: 10px;
+  margin-top: 2px;
   padding: 12px 20px;
-  background: #3AAB2F;
-  color: #FFF;
-  border: 2px solid #000;
+  background: #FFF;
+  color: black;
+  border: 3px solid #000;
   border-radius: 12px;
   font-family: 'Pixelify Sans', sans-serif;
   font-size: 24px;
@@ -141,4 +141,131 @@
   text-align: center;
   color: #000;
   margin-bottom: 10px;
+}
+
+.voice {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 70px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.file-upload {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  /* Important */
+  width: 60px;
+  /* or whatever size you want */
+  height: 60px;
+}
+
+/* Totally hide the ugly native file input */
+.file-upload input[type="file"] {
+  opacity: 0;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  z-index: 2;
+}
+
+/* Show only your SVG */
+.file-upload img {
+  width: 50px;
+  height: 50px;
+  pointer-events: none;
+  /* Let clicks pass through to the hidden input */
+}
+
+.file-upload img:hover {
+  transform: scale(1.1);
+}
+
+
+/* Flex wrapper for both cards */
+.card-row {
+  display: flex;
+  align-items: flex-end;
+  /* <-- KEY: align bottoms */
+  justify-content: center;
+  gap: 150px;
+  /* Space between the two cards */
+  margin-top: 50px;
+}
+
+/* Finish card styles (you already have this) */
+.finishcard-container {
+  position: relative;
+  width: 431px;
+  height: 534px;
+  background: #EA5E6F;
+  border: 4px solid #000000;
+  border-radius: 30px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+/* New Translated Card */
+.translatedcard-container {
+  position: relative;
+  width: 352px;
+  height: 436px;
+  background: #E699A2;
+  border: 4px solid #000000;
+  border-radius: 30px;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Inner white box inside the translated card */
+.translatedcard-inner {
+  width: 299px;
+  height: 303px;
+  background: #FFFFFF;
+  border: 3px solid #000000;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+}
+
+/* Text inside translated card */
+.translatedcard-text {
+  font-family: 'Pixelify Sans', sans-serif;
+  font-size: 24px;
+  color: #2F2F2F;
+  text-align: center;
+  line-height: 29px;
+}
+
+/* Back button itself */
+.back-button {
+  position: absolute;
+  top: 300px;
+  right: 250px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.back-button img {
+  width: 50px;
+  height: 50px;
+  transition: transform 0.2s;
+}
+
+.back-button img:hover {
+  transform: scale(1.1);
 }

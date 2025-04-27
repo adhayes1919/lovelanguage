@@ -41,9 +41,7 @@ const Home = () => {
     return (
         <div>
             <button onClick={handleLogout}>Logout</button>
-            <div>
-                <Study />
-            </div>
+            <Study />
             <Navbar />
         </div>
     )
