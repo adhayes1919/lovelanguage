@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Navbar from 'components/Navbar';
 import './Finish.css';
+import './Start.css';
 
 // SM-2 algorithm for spaced repetition
 function calculateEase(currentEF, quality) {
@@ -74,34 +75,42 @@ const StartCard = ({ partner }) => {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <div>
-                <input
-                    type="text"
-                    placeholder="Front"
-                    required
-                    value={front}
-                    onChange={(e) => setFront(e.target.value)}
-                />
+        <div className="start-card-row">
+            {/* Left side: requested card */}
+            <div className="requestedcard-container">
+                <div className="requestedcard-inner">
+                    <span className="requestedcard-text">Your requested cards show up here</span>
+                </div>
+                <button className="startcard-unsend-button">Unsend</button>
             </div>
-            <div>
-                Attach audio?
-                <input
-                    type="file"
-                    accept="audio/*"
-                    onChange={(e) => setAudioFile(e.target.files[0])}
-                />
+
+            {/* Right side: start card */}
+            <div className="startcard-container">
+                <div className="startcard-inner">
+                    <div className="startcard-header">How do you say...</div>
+                    <form onSubmit={handleSubmit} style={{ width: '100%' }}>
+                        <input
+                            type="text"
+                            className="startcard-textarea"
+                            placeholder="Word"
+                            required
+                            value={front}
+                            onChange={(e) => setFront(e.target.value)}
+                        />
+                    </form>
+                    <div className="startcard-footer">in your language?</div>
+                </div>
+                {/* Send and Unsend Buttons floating */}
+                <button type="submit" className="startcard-send-button">Send</button>
+
+                <div className='bottom-container'>
+                    <div className="startcard-partner">{partner}</div>
+
+                    <div className="startcard-badge"></div>
+                </div>
             </div>
-            <div>
-                Attach image?
-                <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => setImageFile(e.target.files[0])}
-                />
-            </div>
-            <button type="submit">Send to {partner}</button>
-        </form>
+        </div>
+
     );
 };
 
@@ -177,7 +186,7 @@ const Study = () => {
             )}
             {!activeView && (
                 <div className="study-buttons">
-                    <button className="study-button" onClick={handleStartClick}>Start</button>
+                    <button className="start-button" onClick={handleStartClick}>Start</button>
                     <button className="finish-button" onClick={handleFinishClick}>Finish</button>
                     <button className="study-button" onClick={handleCurrentClick}>Current Cards</button>
                 </div>
