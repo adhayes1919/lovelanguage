@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Navbar from 'components/Navbar';
 import './Finish.css';
 import './Start.css';
+import './Study.css';
 
 // SM-2 algorithm for spaced repetition
 function calculateEase(currentEF, quality) {
@@ -39,26 +40,43 @@ const CurrentCards = () => {
     };
 
     return (
-        <div>
-            <span>your word</span>
-            <button>Listen</button> {/* TODO: hook up audio */}
+        <div className="flip-card-wrapper">
+            <div className={`flip-card ${cardSide === 'back' ? 'flipped' : ''}`}>
+                <div className="flip-card-inner">
+                    <div className="flip-card-front" onClick={flipCard}>
+                        {/* Front of Card Content */}
+                        <div className="frontcard-word">Your Word</div>
+                    </div>
 
-            <button onClick={flipCard}>
-                {cardSide === 'front' ? 'Front of card' : 'Back of card'}
-            </button>
+                    <div className="flip-card-back">
+                        {/* Back of Card Content */}
+                        <div className="backcard-word">Translation</div>
+                        <img src="/img/playrecording.svg" alt="Play Recording" className="play-audio-button" />
 
-            {cardSide === 'back' && (
-                <div className="feedbackButtons">
-                    <span>Rate this card</span>
-                    <button onClick={() => handleFeedback(FEEDBACK.AGAIN)}>1: Again</button>
-                    <button onClick={() => handleFeedback(FEEDBACK.HARD)}>2: Hard</button>
-                    <button onClick={() => handleFeedback(FEEDBACK.GOOD)}>3: Good</button>
-                    <button onClick={() => handleFeedback(FEEDBACK.EASY)}>4: Easy</button>
-                    {showUndo && <button onClick={undo}>Undo</button>}
+                    </div>
                 </div>
-            )}
+            </div>
+
+            {/* Conditional Rendering Below */}
+            <div className='studybar'>
+                {cardSide === 'front' && (
+                    <div className="frontcard-progress-text">1/10</div>
+                )}
+
+                {cardSide === 'back' && (
+                    <div className="feedbackButtons">
+                        <span>Rate this card</span>
+                        <button onClick={() => handleFeedback(FEEDBACK.AGAIN)}>1: Again</button>
+                        <button onClick={() => handleFeedback(FEEDBACK.HARD)}>2: Hard</button>
+                        <button onClick={() => handleFeedback(FEEDBACK.GOOD)}>3: Good</button>
+                        <button onClick={() => handleFeedback(FEEDBACK.EASY)}>4: Easy</button>
+                        {showUndo && <button onClick={undo}>Undo</button>}
+                    </div>
+                )}
+            </div>
         </div>
     );
+
 };
 
 const StartCard = ({ partner }) => {
