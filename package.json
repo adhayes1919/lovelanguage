@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "dev": "concurrently \"node server/usermanagement.js\" \"npm run dev --prefix client -- --host\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

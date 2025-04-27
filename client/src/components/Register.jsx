@@ -1,37 +1,44 @@
 import { useState, useEffect } from "react";
+import { registerUser, loginUser } from "utils/auth/auth.js";
 
 const Register = () => {
-    const [name, setName] = useState('');
-    const [language, setLanguage] = useState('');
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
-    const handleSubmitRegister = () => {
-        //TODO: handle api component here
-    }
+    const [formData, setFormData] = useState({
+        name: '',
+        language: '',
+        username: '',
+        password: '',
+        confirmPassword: '',
+    });
+    const handleChange = (e) => {
+        setFormData({...formData, [e.target.name]: e.target.value});
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const result = await registerUser(formData);
+        if (result.success) {
+            console.log("User registered");
+            await loginUser({ username: formData.username, password: formData.password });
+
+            if (loginResult) {
+                console.error('Auto-login failed unexpectedly.');
+                navigate('/'); // 
+            }
+        } else {
+            alert(`Registration failed: ${registerResult.message}`);
+        }
+    };
 
     return (
-        <div>
-            <form onSubmit={handleSubmitRegister}> 
-                <input type="text" placeholder = "username"
-                    onChange={(e) => setUsername(e.target.value)}
-                />
-                <input type="text" placeholder = "name"
-                    onChange={(e) => setName(e.target.value)}
-                />
-                <input type="text" placeholder = "language"
-                    onChange={(e) => setLanguage(e.target.value)}
-                />
-                <input type="password" placeholder = "password"
-                    onChange={(e) => setPassword(e.target.value)}
-                />
-                <input type="password" placeholder = "confirm password"
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                />
-                <button type="submit"> register </button>
-            </form>
-        </div>
-    )
-}
+        <form onSubmit={handleSubmit}>
+            <input name="username" onChange={handleChange} placeholder="Username" />
+            <input name="name" onChange={handleChange} placeholder="Your name" />
+            <input name="password" type="password" onChange={handleChange} placeholder="Password" />
+            <input name="confirmPassword" type="password" onChange={handleChange} placeholder="Password" />
+            <input name="language" onChange={handleChange} placeholder="Language" />
+            <button type="submit">Register</button>
+        </form>
+    );
+};
 
 export default Register;
