@@ -1,9 +1,7 @@
-const { MongoClient, ObjectId } = require('mongodb');
+//import {ObjectId} from 'mongodb';
 
-const uri = 'mongodb://10.135.168.95:27017';
-const client = new MongoClient(uri);
 
-async function couple_findMatch(db, userA_id, searchMatchCode){
+export async function couple_findMatch(db, userA_id, searchMatchCode){
 	// create a partnership entry that records both members and other details
 	try{
 		const users = db.collection('users');
@@ -48,9 +46,7 @@ async function couple_findMatch(db, userA_id, searchMatchCode){
 		console.log('Partnership created');
 	} catch (error) {
 		console.error('Error creating partnership:  ', error);	
-	} finally {
-		await client.close();
-	}
+	} 
 }
 
-couple_findMatch(process.argv[2], process.argv[3]).catch(console.dir);
+//couple_findMatch(process.argv[2], process.argv[3]).catch(console.dir);

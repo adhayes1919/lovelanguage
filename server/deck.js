@@ -1,12 +1,5 @@
-require('dotenv'.config());
-const { MongoClient, ObjectId } = require('mongodb');
-const uri = process.env.MONGO_URI;
-const client = new MongoClient(uri);
-
-async function deck_upsertCardBack(db, user_id, txt_front, txt_back){
+export async function deck_upsertCardBack(db, user_id, txt_front, txt_back){
 	try {
-		// await client.connect();
-		// const db = client.db('lovelang');
 		const users = db.collection('users');
 		
 		const updateResult = await users.updateOne(
@@ -28,10 +21,9 @@ async function deck_upsertCardBack(db, user_id, txt_front, txt_back){
 	}
 }
 
-async function deck_updateCardEase(db, user_id, txt_front, score) {
+export async function deck_updateCardEase(db, user_id, txt_front, score) {
 	try {
 		const users = db.collection('users');
-
 		const updateResult = await users.updateOne(
 			{ _id: new ObjectId(user_id), "deck.txt_front": txt_front},
 			{ $set: { "deck.$.ease": score} }
@@ -47,7 +39,7 @@ async function deck_updateCardEase(db, user_id, txt_front, score) {
 	}
 }
 
-async function deck_requestCard(db, userA_id, txt_request){
+export async function deck_requestCard(db, userA_id, txt_request){
 	try {
 		const users = db.collection('users');
 		const partnerships = db.collection('partnerships');
@@ -91,7 +83,7 @@ async function deck_requestCard(db, userA_id, txt_request){
 	}
 }
 
-async function deck_getRequestsReceived(db, user_id) {
+export async function deck_getRequestsReceived(db, user_id) {
 	try {
 		const requests = db.collection('requests');
 
@@ -103,7 +95,7 @@ async function deck_getRequestsReceived(db, user_id) {
 	}
 }
 
-async function deck_getFullDeck(db, user_id) {
+export async function deck_getFullDeck(db, user_id) {
 	try {
 		const users = db.collection('users');
 
@@ -121,7 +113,7 @@ async function deck_getFullDeck(db, user_id) {
 	}
 }
 
-async function deck_getCardInfo(db, user_id, txt_front) {
+export async function deck_getCardInfo(db, user_id, txt_front) {
 	try {
 		const users = db.collection('users');
 
@@ -149,7 +141,8 @@ async function deck_getCardInfo(db, user_id, txt_front) {
 	}
 }
 
-async function main() {
+/*
+export async function main() {
 	// await deck_requestCard(process.argv[2], process.argv[3]);
 	// await deck_upsertCardBack(process.argv[2], process.argv[3], process.argv[4]).catch(console.dir)
 	// const requests = await deck_getRequestsReceived(process.argv[2]);
@@ -158,8 +151,8 @@ async function main() {
 	const deck = await deck_getFullDeck(process.argv[2]);
 	console.log(deck);
 	console.log(await deck_getCardInfo(process.argv[2],process.argv[3]));
-	await client.close();
 }
 
 
 main().catch(console.dir);
+*/

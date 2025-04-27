@@ -39,7 +39,6 @@ const CurrentCards = () => {
 
 	return (
 		<div>
-			<span>your word</span>
 			<button>Listen</button> {/* TODO: hook up audio */}
 
 			<button onClick={flipCard}>
