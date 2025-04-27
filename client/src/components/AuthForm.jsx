@@ -1,3 +1,4 @@
+import './AuthForm.css'
 import { useState } from 'react';
 import { loginUser, registerUser } from 'utils/auth.js';
 import { useNavigate } from 'react-router-dom';
@@ -43,17 +44,23 @@ const Login = ({ switchToRegister, setLoggedIn }) => {
 	};
 
 	return (
-		<div>
-			<form onSubmit={handleSubmit}>
-				<input name="username" onChange={handleChange} placeholder="Username" />
-				<input name="password" type="password" onChange={handleChange} placeholder="Password" />
-				<button type="submit">Login</button>
-			</form>
-			<p>
-				Don't have an account?{' '}
-				<button onClick={switchToRegister}>Register here</button>
-			</p>
-		</div>
+	<div className="auth-page-wrap">
+		<div className="auth-main-container">
+			<div className="auth-name-and-form">
+					<h1 className="auth-h1" id="h1-login">Welcome Back</h1>
+				<form className="auth-form" id="form-login" onSubmit={handleSubmit}>
+					<input name="username" onChange={handleChange} placeholder="Username" />
+					<input name="password" type="password" onChange={handleChange} placeholder="Password" />
+				</form>
+				<button className="auth-CTA-button">Log In</button>
+			</div>
+			<div className="auth-bottom-text">
+				<p>Doesn't have an account?</p>
+				<p id="switch-page" onClick={switchToRegister} >Register Here</p>
+			</div>
+	</div>
+
+</div>
 	);
 };
 
@@ -97,22 +104,27 @@ const Register = ({ switchToLogin, setLoggedIn }) => {
 	};
 
 	return (
-		<div>
-			<form onSubmit={handleSubmit}>
+<div className="auth-page-wrap">
+	<div className="auth-main-container">
+		<div className="auth-name-and-form">
+			<h1 className="auth-h1" >Sign Up</h1>
+			<form className="auth-form" onSubmit={handleSubmit}>
+				<input name="name" onChange={handleChange} placeholder="Your Name" />
 				<input name="username" onChange={handleChange} placeholder="Username" />
-				<input name="name" onChange={handleChange} placeholder="Your name" />
 				<input name="password" type="password" onChange={handleChange} placeholder="Password" />
-				<input name="confirmPassword" type="password" onChange={handleChange} placeholder="Confirm Password" />
-				<input name="language" onChange={handleChange} placeholder="Language" />
-				<button type="submit">Register</button>
 			</form>
-			<p>
-				Already have an account?{' '}
-				<button onClick={switchToLogin}>Login here</button>
-			</p>
+			<button className="auth-CTA-button">Register</button>
 		</div>
+
+
+		<div className="auth-bottom-text" id="text-bottom-register">
+				<p>Already have an account?</p>
+				<p id="switch-page" onClick={switchToLogin} >Log In Here</p>
+		</div>
+	</div>
+
+</div>
 	);
 };
 
 export default AuthForm;
-

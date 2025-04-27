@@ -61,8 +61,9 @@ const Home = () => {
 
     return (
         <div>
-            <button onClick={handleLogout}>Logout</button>
-            <Study />
+            <div className='home-page-wrap'>
+                <Study />
+            </div>
             <Navbar />
         </div>
     );

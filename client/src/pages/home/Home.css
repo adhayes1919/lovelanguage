@@ -1,0 +1,10 @@
+.home-page-wrap {
+  padding: 0;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 1280px;
+  height: 832px;
+  background: #FEC500;
+}

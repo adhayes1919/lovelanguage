@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import Navbar from 'components/Navbar';
+import './Finish.css';
+import './Start.css';
 import './Study.css';
 
 // SM-2 algorithm for spaced repetition
@@ -37,26 +39,44 @@ const CurrentCards = () => {
         console.log(`new ease factor = ${newEase}`);
     };
 
-	return (
-		<div>
-			<button>Listen</button> {/* TODO: hook up audio */}
+    return (
+        <div className="flip-card-wrapper">
+            <div className={`flip-card ${cardSide === 'back' ? 'flipped' : ''}`}>
+                <div className="flip-card-inner">
+                    <div className="flip-card-front" onClick={flipCard}>
+                        {/* Front of Card Content */}
+                        <div className="frontcard-word">Your Word</div>
+                    </div>
 
-            <button onClick={flipCard}>
-                {cardSide === 'front' ? 'Front of card' : 'Back of card'}
-            </button>
+                    <div className="flip-card-back">
+                        {/* Back of Card Content */}
+                        <div className="backcard-word">Translation</div>
+                        <img src="/img/playrecording.svg" alt="Play Recording" className="play-audio-button" />
 
-            {cardSide === 'back' && (
-                <div className="feedbackButtons">
-                    <span>Rate this card</span>
-                    <button onClick={() => handleFeedback(FEEDBACK.AGAIN)}>1: Again</button>
-                    <button onClick={() => handleFeedback(FEEDBACK.HARD)}>2: Hard</button>
-                    <button onClick={() => handleFeedback(FEEDBACK.GOOD)}>3: Good</button>
-                    <button onClick={() => handleFeedback(FEEDBACK.EASY)}>4: Easy</button>
-                    {showUndo && <button onClick={undo}>Undo</button>}
+                    </div>
                 </div>
-            )}
+            </div>
+
+            {/* Conditional Rendering Below */}
+            <div className='studybar'>
+                {cardSide === 'front' && (
+                    <div className="frontcard-progress-text">1/10</div>
+                )}
+
+                {cardSide === 'back' && (
+                    <div className="feedbackButtons">
+                        <span>Rate this card</span>
+                        <button onClick={() => handleFeedback(FEEDBACK.AGAIN)}>1: Again</button>
+                        <button onClick={() => handleFeedback(FEEDBACK.HARD)}>2: Hard</button>
+                        <button onClick={() => handleFeedback(FEEDBACK.GOOD)}>3: Good</button>
+                        <button onClick={() => handleFeedback(FEEDBACK.EASY)}>4: Easy</button>
+                        {showUndo && <button onClick={undo}>Undo</button>}
+                    </div>
+                )}
+            </div>
         </div>
     );
+
 };
 
 const StartCard = ({ partner }) => {
@@ -73,34 +93,42 @@ const StartCard = ({ partner }) => {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <div>
-                <input
-                    type="text"
-                    placeholder="Front"
-                    required
-                    value={front}
-                    onChange={(e) => setFront(e.target.value)}
-                />
+        <div className="start-card-row">
+            {/* Left side: requested card */}
+            <div className="requestedcard-container">
+                <div className="requestedcard-inner">
+                    <span className="requestedcard-text">Your requested cards show up here</span>
+                </div>
+                <button className="startcard-unsend-button">Unsend</button>
             </div>
-            <div>
-                Attach audio?
-                <input
-                    type="file"
-                    accept="audio/*"
-                    onChange={(e) => setAudioFile(e.target.files[0])}
-                />
+
+            {/* Right side: start card */}
+            <div className="startcard-container">
+                <div className="startcard-inner">
+                    <div className="startcard-header">How do you say...</div>
+                    <form onSubmit={handleSubmit} style={{ width: '100%' }}>
+                        <input
+                            type="text"
+                            className="startcard-textarea"
+                            placeholder="Word"
+                            required
+                            value={front}
+                            onChange={(e) => setFront(e.target.value)}
+                        />
+                    </form>
+                    <div className="startcard-footer">in your language?</div>
+                </div>
+                {/* Send and Unsend Buttons floating */}
+                <button type="submit" className="startcard-send-button">Send</button>
+
+                <div className='bottom-container'>
+                    <div className="startcard-partner">{partner}</div>
+
+                    <div className="startcard-badge"></div>
+                </div>
             </div>
-            <div>
-                Attach image?
-                <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => setImageFile(e.target.files[0])}
-                />
-            </div>
-            <button type="submit">Send to {partner}</button>
-        </form>
+        </div>
+
     );
 };
 
@@ -176,7 +204,7 @@ const Study = () => {
             )}
             {!activeView && (
                 <div className="study-buttons">
-                    <button className="study-button" onClick={handleStartClick}>Start</button>
+                    <button className="start-button" onClick={handleStartClick}>Start</button>
                     <button className="finish-button" onClick={handleFinishClick}>Finish</button>
                     <button className="study-button" onClick={handleCurrentClick}>Current Cards</button>
                 </div>
