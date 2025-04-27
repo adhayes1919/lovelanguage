@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { loginUser, registerUser } from 'utils/auth/auth.js';
+import { loginUser, registerUser } from 'utils/auth.js';
 import { useNavigate } from 'react-router-dom'; 
 
 const AuthForm = () => {

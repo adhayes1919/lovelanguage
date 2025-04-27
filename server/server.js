@@ -1,116 +1,122 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-import { MongoClient } from 'mongodb';
-import cors from 'cors';
 import express from 'express';
-import registerUser from './registeruser.js';
-import { deck_upsertCardBack, deck_updateCardEase, deck_requestCard, deck_getRequestsReceived, deck_getFullDeck, deck_getCardInfo } from './deck.js';
-import getLeaderboard from './leaderboard.js';
-import { incrementStreak, addPoints } from './couple.js'
-import loginUser from './loginuser.js';
+import cors from 'cors';
+import { MongoClient } from 'mongodb';
 import ISO6391 from 'iso-639-1';
 
+import { registerUser, loginUser } from './auth.js';
+import { addPoints, incrementStreak, getLeaderboard } from './scoring.js';
+import { couple_findMatch } from './couple.js';
+import { 
+	deck_upsertCardBack,
+	deck_updateCardEase,
+	deck_requestCard,
+	deck_getRequestsReceived,
+	deck_getFullDeck,
+	deck_getCardInfo
+} from './deck.js';
+
+// MongoDB
 const uri = process.env.MONGO_URI;
 const client = new MongoClient(uri);
 await client.connect();
 const db = client.db('lovelang');
 
+// Express
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 5000;
 
-app.post("/api/register", async (req,res) => {
-    const { username, password, confirmPassword, name, language } = req.body;
-    if ( password != confirmPassword ) {
-        return res.status(400).json({ success: false, message: 'Passwords do not match' });
-    }
-    if (!ISO6391.validate(language)) {
-        return res.status(400).json({ success: false, message: 'Invalid language.' });
-    }
-    try {
-        const result = await registerUser(db, username, password, confirmPassword, name, language);
-        if (result === -1) {
-            return res.status(400).json({ success: false, message: 'Username already exists' }); 
-        }
-        res.status(201).json({ success: true, message: 'User registered successfully' });
-    } catch (error) {
-        console.error('Error registering user:', error);
-        res.status(500).json({ success: false, message: 'Server error' });
-    }
+/* --- AUTH ROUTES --- */
+
+app.post("/api/auth/register", async (req, res) => {
+	const { username, password, confirmPassword, name, language } = req.body;
+
+	if (password !== confirmPassword) {
+		return res.status(400).json({ success: false, message: 'Passwords do not match' });
+	}
+	if (!ISO6391.validate(language)) {
+		return res.status(400).json({ success: false, message: 'Invalid language.' });
+	}
+
+	try {
+		const result = await registerUser(db, username, password, confirmPassword, name, language);
+		if (!result.success) {
+			return res.status(400).json({ success: false, message: result.message });
+		}
+		res.status(201).json({ success: true, message: 'User registered successfully' });
+	} catch (error) {
+		console.error('Error registering user:', error);
+		res.status(500).json({ success: false, message: 'Server error' });
+	}
 });
 
-app.post("/api/login", async (req,res) => {
-    const { username, password } = req.body;
-
-    try {
-        const success = await loginUser(db, username, password);
-
-        if (!success) {
-            return res.status(401).json({ success: false, message: 'Incorrect username or password' });
-        }
-        res.status(200).json({ success: true, message: 'Login successful' });
-    } catch (error) {
-        console.error('Error logging in:', error);
-        res.status(500).json({ success: false, message: 'Server error' });
-    }
+app.post("/api/auth/login", async (req, res) => {
+	const { username, password } = req.body;
+	try {
+		const success = await loginUser(db, username, password);
+		if (!success) {
+			return res.status(401).json({ success: false, message: 'Incorrect username or password' });
+		}
+		res.status(200).json({ success: true, message: 'Login successful' });
+	} catch (error) {
+		console.error('Error logging in:', error);
+		res.status(500).json({ success: false, message: 'Server error' });
+	}
 });
 
-/* DECK COMMANDS */
+/* --- DECK ROUTES --- */
 
-app.post("/api/deck_upsertCardBack", async (req, res) => {
+app.post("/api/deck/upsert-card-back", async (req, res) => {
 	const { user_id, txt_front, txt_back } = req.body;
-
 	try {
 		await deck_upsertCardBack(db, user_id, txt_front, txt_back);
 		res.status(200).send('Card upserted successfully');
 	} catch (error) {
-		console.error('Error in /deck_upsertCardBack:', error);
+		console.error('Error in /deck/upsert-card-back:', error);
 		res.status(500).send('Server error');
 	}
 });
 
-app.post("/api/deck_updateCardEase", async (req, res) => {
+app.post("/api/deck/update-card-ease", async (req, res) => {
 	const { user_id, txt_front, score } = req.body;
-
 	try {
 		await deck_updateCardEase(db, user_id, txt_front, score);
 		res.status(200).send('Card ease updated successfully');
 	} catch (error) {
-		console.error('Error in /deck_updateCardEase:', error);
+		console.error('Error in /deck/update-card-ease:', error);
 		res.status(500).send('Server error');
 	}
 });
 
-app.post("/api/deck_requestCard", async (req, res) => {
+app.post("/api/deck/request-card", async (req, res) => {
 	const { userA_id, txt_request } = req.body;
-
 	try {
 		await deck_requestCard(db, userA_id, txt_request);
-		res.status(200).send('Request created successfully');
+		res.status(200).send('Card request created successfully');
 	} catch (error) {
-		console.error('Error in /deck_requestCard:', error);
+		console.error('Error in /deck/request-card:', error);
 		res.status(500).send('Server error');
 	}
 });
 
-app.post("/api/deck_getRequestsReceived", async (req, res) => {
+app.post("/api/deck/requests-received", async (req, res) => {
 	const { user_id } = req.body;
-
 	try {
 		const requestsReceived = await deck_getRequestsReceived(db, user_id);
 		res.status(200).json(requestsReceived);
 	} catch (error) {
-		console.error('Error in /deck_getRequestsReceived:', error);
+		console.error('Error in /deck/requests-received:', error);
 		res.status(500).send('Server error');
 	}
 });
 
-app.post("/api/deck_getFullDeck", async (req, res) => {
+app.post("/api/deck/full-deck", async (req, res) => {
 	const { user_id } = req.body;
-
 	try {
 		const deck = await deck_getFullDeck(db, user_id);
 		if (deck) {
@@ -119,14 +125,13 @@ app.post("/api/deck_getFullDeck", async (req, res) => {
 			res.status(404).send('No deck found');
 		}
 	} catch (error) {
-		console.error('Error in /deck_getFullDeck:', error);
+		console.error('Error in /deck/full-deck:', error);
 		res.status(500).send('Server error');
 	}
 });
 
-app.post("/api/deck_getCardInfo", async (req, res) => {
+app.post("/api/deck/card-info", async (req, res) => {
 	const { user_id, txt_front } = req.body;
-
 	try {
 		const card = await deck_getCardInfo(db, user_id, txt_front);
 		if (card) {
@@ -135,64 +140,63 @@ app.post("/api/deck_getCardInfo", async (req, res) => {
 			res.status(404).send('No matching card found');
 		}
 	} catch (error) {
-		console.error('Error in /deck_getCardInfo:', error);
+		console.error('Error in /deck/card-info:', error);
 		res.status(500).send('Server error');
 	}
 });
 
-/* LEADERBOARD COMMANDS */
+/* --- SCORING ROUTES --- */
 
-app.post("/api/getLeaderboard", async (req, res) => {
-	const { mode, limit } = req.body;
-
-	try {
-		const leaderboard = await getLeaderboard(db, mode, limit);
-		res.status(200).json(leaderboard);
-	} catch (error) {
-		console.error('Error in /getLeaderboard:', error);
-		res.status(500).send('Server error');
-	}
-});
-
-/* SCORING COMMANDS */
-
-app.post("/api/addPoints", async (req, res) => {
+app.post("/api/scoring/add-points", async (req, res) => {
 	const { user_id, count } = req.body;
-
 	try {
 		await addPoints(db, user_id, count);
 		res.status(200).send('Points added successfully');
 	} catch (error) {
-		console.error('Error in /addPoints:', error);
+		console.error('Error in /scoring/add-points:', error);
 		res.status(500).send('Server error');
 	}
 });
 
-app.post("/api/incrementStreak", async (req, res) => {
+app.post("/api/scoring/increment-streak", async (req, res) => {
 	const { user_id } = req.body;
-
 	try {
 		await incrementStreak(db, user_id);
 		res.status(200).send('Streak incremented successfully');
 	} catch (error) {
-		console.error('Error in /incrementStreak:', error);
+		console.error('Error in /scoring/increment-streak:', error);
 		res.status(500).send('Server error');
 	}
 });
 
-/* SERVER COMMANDS*/
+/* --- LEADERBOARD ROUTES --- */
 
-app.post("/api/couple_findMatch", async (req, res) => {
+app.post("/api/leaderboard", async (req, res) => {
+	const { mode, limit } = req.body;
+	try {
+		const leaderboard = await getLeaderboard(db, mode, limit);
+		res.status(200).json(leaderboard);
+	} catch (error) {
+		console.error('Error in /leaderboard:', error);
+		res.status(500).send('Server error');
+	}
+});
+
+/* --- PARTNERSHIP ROUTES --- */
+
+app.post("/api/partner/find-match", async (req, res) => {
 	const { userA_id, searchMatchCode } = req.body;
-
 	try {
 		await couple_findMatch(db, userA_id, searchMatchCode);
 		res.status(200).send('Partnership created successfully');
 	} catch (error) {
-		console.error('Error in /couple_findMatch:', error);
+		console.error('Error in /partner/find-match:', error);
 		res.status(500).send('Server error');
 	}
 });
 
+/* --- SERVER START --- */
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => {
+	console.log(`Server running on port ${PORT}`);
+});

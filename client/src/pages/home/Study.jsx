@@ -37,10 +37,9 @@ const CurrentCards = () => {
         console.log(`new ease factor = ${newEase}`);
     };
 
-    return (
-        <div>
-            <span>your word</span>
-            <button>Listen</button> {/* TODO: hook up audio */}
+	return (
+		<div>
+			<button>Listen</button> {/* TODO: hook up audio */}
 
             <button onClick={flipCard}>
                 {cardSide === 'front' ? 'Front of card' : 'Back of card'}
